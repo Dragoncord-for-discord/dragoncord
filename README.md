@@ -1,0 +1,2 @@
+# dragoncord
+Main dragoncord client
