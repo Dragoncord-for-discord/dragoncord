@@ -1,0 +1,1 @@
+npm start --unhandled-rejections=strict --trace-warnings

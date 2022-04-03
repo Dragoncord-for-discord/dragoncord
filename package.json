@@ -1,0 +1,17 @@
+{
+  "name": "dragoncord-electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "dragonfire-community",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^17.2.0"
+  },
+  "dependencies": {
+    "open": "^8.4.0"
+  }
+}

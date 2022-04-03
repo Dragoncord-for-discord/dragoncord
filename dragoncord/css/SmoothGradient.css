@@ -1,0 +1,17 @@
+.header-3OsQeK {
+  box-shadow: none;
+}
+
+.animatedContainer-2laTjx {
+  box-shadow: none;
+}
+
+.animatedContainer-2laTjx::before {
+  background: linear-gradient(transparent 0%, var(--background-secondary) 100%, transparent 0%);
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 100%;
+  bottom: 0;
+  z-index: 1;
+}

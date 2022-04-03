@@ -1,0 +1,10 @@
+.downloadApps-14IgKV {
+	visibility: hidden;
+}
+
+
+[aria-label^="Загрузить приложения"] {
+	height: 1px;
+	width: 1px;
+	visibility: hidden;
+}

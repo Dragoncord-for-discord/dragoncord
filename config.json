@@ -1,0 +1,21 @@
+{
+	"APP_ICON": ".\\dragoncord\\discord\\images\\app.ico",
+	"TRAY_ICON": ".\\dragoncord\\discord\\images\\tray.png",
+	"DCORD_ENDPOINT": "https://ptb.discord.com",
+	"WEBAPP_TITLE": "Discord",
+	"DEFAULT_WIDTH": 1280,
+	"DEFAULT_HEIGHT": 720,
+
+	"BACKGROUND_COLOR": "#36393F",
+	"WINDOW_OPACITY": 0.95,
+	"KIOSK": false,
+	"ALWAYS_ON_TOP": false,
+
+	"EXPERIMENTAL_FEATURES": true,
+	"DEVELOPER_TOOLS": true,
+	"NODE_INTEGRATION": true,
+	"ENABLE_WEBSQL": true,
+	"ENABLE_WEBGL": true,
+	"ENABLE_WEBAUDIO": true,
+	"ALLOW_RUNNING_INSECURE_CONTENT": true
+}
