@@ -1,0 +1,16 @@
+.info-1VyQPT {
+  text-transform: none;
+}
+
+.info-1VyQPT .size12-3cLvbJ {
+  text-transform: capitalize;
+}
+
+.info-1VyQPT:last-child::after {
+  content: 'Ooo a cool text!';
+  color: var(--text-muted);
+  position: relative;
+  line-height: 16px;
+  font-size: 12px;
+  width: 100%;
+}

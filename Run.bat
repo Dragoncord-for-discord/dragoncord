@@ -1,1 +1,1 @@
-npm start --unhandled-rejections=strict --trace-warnings
+npm run dragoncord:start --unhandled-rejections=strict --trace-warnings

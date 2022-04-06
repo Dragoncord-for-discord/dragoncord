@@ -1,26 +1,34 @@
 var config = require('./config.json');
 
-console.log('Dragoncord By DragonFire | Web Client | Alpha 28.03.2022');
-console.log('Endpoint: ' + config.DCORD_ENDPOINT)
-
 // Libs
-const { app, BrowserWindow, webContents, Menu, Tray } = require('electron');
+const { app, BrowserWindow, webContents, Menu, Tray, BrowserView } = require('electron');
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
+const { setupTitlebar, attachTitlebarToWindow, Titlebar } = require("custom-electron-titlebar/main");
+const spawnObj = require('child_process').spawn;
+
+setupTitlebar();
+
+if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can make some problems and errors!'); } 
+
+console.log('Dragoncord By DragonFire | Web Client | Alpha 28.03.2022');
+console.log('Endpoint: ' + config.DCORD_ENDPOINT);
+
+let main;
 
 // Window
-
-const mainWindow = () => {
+function createWindow() {
   const main = new BrowserWindow({
     width: config.DEFAULT_WIDTH,
     height: config.DEFAULT_HEIGHT,
-    //frame: false,
     backgroundColor: config.BACKGROUND_COLOR,
     icon: config.APP_ICON,
     darkTheme: true,
+    frame: false,
     webPreferences: {
       title: config.WEBAPP_TITLE,
+      preload: path.join(__dirname, 'preload.js'),
       // Secure options
       allowRunningInsecureContent: config.ALLOW_RUNNING_INSECURE_CONTENT,
       //contextIsolation: false,
@@ -41,6 +49,7 @@ const mainWindow = () => {
       enableWebSQL: config.ENABLE_WEBSQL
     }
   })
+  require("@electron/remote/main").enable(main.webContents);
 
   // Dragoncord
   fs.readdir('./dragoncord/js', function (err, files) {
@@ -96,7 +105,70 @@ const mainWindow = () => {
   main.setAlwaysOnTop(config.ALWAYS_ON_TOP);
 
   // Loads Discord
-  main.loadURL(config.DCORD_ENDPOINT + '/app');
+  attachTitlebarToWindow(main);
+  var menu = Menu.buildFromTemplate([
+  {
+    label: 'Dragoncord',
+    submenu: [
+    {
+      label: 'Config', 
+      click() { 
+        spawnObj('notepad.exe', ["config.json"]);
+      },
+      label: 'About', 
+      click() {
+        main.webContents.loadFile('./dragoncord/pages/about/index.html');
+      }
+    }]
+  },
+  {
+    label: 'Discord Web Sites',
+    submenu: [
+    {
+      label: 'Discord', 
+      click() {
+        main.webContents.loadURL('https://discord.com/app');
+      }
+    },
+    {
+      label: 'Discord PTB', 
+      click() {
+        main.webContents.loadURL('https://ptb.discord.com/app');
+      }
+    },
+    {
+      label: 'Discord Canary', 
+      click() {
+        main.webContents.loadURL('https://canary.discord.com/app');
+      }
+    },
+    {
+      label: 'Discord Status', 
+      click() {
+        main.webContents.loadURL('https://dis.gd/status');
+      }
+    },
+    {
+      label: "Custom: " + config.DCORD_ENDPOINT, 
+      click() {
+        main.webContents.loadURL(config.DCORD_ENDPOINT);
+      }
+    }
+    ]
+  },
+  {
+    label: 'Development',
+    submenu: [
+    {
+      label: 'Developer Tools', 
+      click() { 
+        main.webContents.openDevTools();
+      }
+    }]
+  }
+  ])
+  Menu.setApplicationMenu(menu); 
+  main.webContents.loadURL(config.DCORD_ENDPOINT + '/app');
 }
 
 // Events
@@ -119,7 +191,7 @@ app.on('minimize', () => {
 
 // Load App
 app.whenReady().then(() => {
-  mainWindow();
+  createWindow();
 
   // Tray
   tray = new Tray(config.TRAY_ICON)
@@ -133,9 +205,4 @@ app.whenReady().then(() => {
   tray.setToolTip(config.WEBAPP_TITLE)
   tray.setTitle(config.WEBAPP_TITLE)
   tray.setContextMenu(contextMenu)
-
-  // Run
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  })
 })
