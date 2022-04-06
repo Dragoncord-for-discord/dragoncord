@@ -10,7 +10,7 @@ Open shell and run:
 
 ``cd dragoncord``
 
-``npm run dragoncord:setup``
+``npm i``
 
 ``npm run dragoncord:start`` (Run dragoncord)
 
