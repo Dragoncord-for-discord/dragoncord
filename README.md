@@ -12,4 +12,6 @@ Open shell and run:
 
 ``npm i``
 
-``npm run start`` (Run dragoncord)
+``npm run dragoncord:start`` (Run dragoncord)
+
+``npm run dragoncord:plug`` (Currently not working & supported)
