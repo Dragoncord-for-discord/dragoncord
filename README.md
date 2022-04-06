@@ -10,8 +10,8 @@ Open shell and run:
 
 ``cd dragoncord``
 
-``npm i``
+``dragoncord:setup``
 
 ``npm run dragoncord:start`` (Run dragoncord)
 
-``npm run dragoncord:plug`` (Currently not working & supported)
+``npm run dragoncord:plug`` and ``npm run dragoncord:unplug`` (Currently not working & supported)
