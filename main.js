@@ -64,7 +64,7 @@ function createWindow() {
   })
   require("@electron/remote/main").enable(main.webContents);
 
-  function load_plugins() {
+  async function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
 	    fs.readdir('./dragoncord/js', function (err, files) {
@@ -86,6 +86,18 @@ function createWindow() {
 	        const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
 	        main.webContents.insertCSS(themeToLoad);
 	        console.log('[Dragoncord CSS] Loaded: ' + file);
+	      });
+	    });
+
+	    // Node Plugins
+	    fs.readdir('./dcord_node_plugins', function (err, files) {
+	      if (err) {
+	        console.log('[Error] Unable to scan directory: ' + err);
+	      }
+	      files.forEach(function (file) {
+	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file).toString();
+	        require('./dcord_node_plugins/' + file);
+	        console.log('[Node Plugin] Loaded: ' + file);
 	      });
 	    });
 
@@ -226,7 +238,6 @@ app.whenReady().then(() => {
   const contextMenu = Menu.buildFromTemplate([
     { label: config.WEBAPP_TITLE, enabled: false },
     { type: "separator" },
-    { label: 'Check for Updates...' },
     { label: 'Acknowledgements', click: function () { open(config.DCORD_ENDPOINT + '/acknowledgements'); } },
     { type: "separator" },
     { label: 'Quit ' + config.WEBAPP_TITLE, click: function () { app.quit(); } }
