@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "dragoncord:start": "electron .",
-    "dragoncord:inject": "echo Inject not support & exit"
+    "dragoncord:plug": "echo Plug not support & exit",
+    "dragoncord:unplug": "echo Unplug not support & exit"
   },
   "author": "dragonfire-community",
   "license": "ISC",

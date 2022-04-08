@@ -14,4 +14,4 @@ Open shell and run:
 
 ``npm run dragoncord:start`` (Run dragoncord)
 
-``npm run dragoncord:plug`` and ``npm run dragoncord:unplug`` (Currently not working & supported)
+``npm run dragoncord:plug`` or ``npm run dragoncord:unplug`` currently not working and not supported

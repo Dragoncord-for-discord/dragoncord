@@ -1,16 +1,29 @@
 var config = require('./config.json');
 
 // Libs
-const { app, BrowserWindow, webContents, Menu, Tray, BrowserView } = require('electron');
+const { app, BrowserWindow, webContents, Menu, Tray, Notification, dialog } = require('electron');
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
 const { setupTitlebar, attachTitlebarToWindow, Titlebar } = require("custom-electron-titlebar/main");
 const spawnObj = require('child_process').spawn;
 
+const myArgs = process.argv.slice(2); // Args
+
+switch (myArgs[0]) {
+  case 'dragoncord-save-mode':
+    console.log('\x1b[46m \x1b[30m', 'Dragoncord', '\x1b[0m', 'Save mode enabled! Plugins and themes load disabled');
+    var savemode = true;
+    var pluginsAndThemesLoadEnabled = false;
+    break;
+  default:
+  	var savemode = false;
+    var pluginsAndThemesLoadEnabled = true;
+}
+
 setupTitlebar();
 
-if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can make some problems and errors!'); } 
+if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can make some problems and errors!'); }
 
 console.log('Dragoncord By DragonFire | Web Client | Alpha 28.03.2022');
 console.log('Endpoint: ' + config.DCORD_ENDPOINT);
@@ -51,60 +64,68 @@ function createWindow() {
   })
   require("@electron/remote/main").enable(main.webContents);
 
-  // Dragoncord
-  fs.readdir('./dragoncord/js', function (err, files) {
-    if (err) {
-      console.log('[Error] Unable to scan directory: ' + err);
-    }
-    files.forEach(function (file) {
-      const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-      main.webContents.executeJavaScript(pluginsToLoad);
-      console.log('[Dragoncord JS] Loaded: ' + file);
-    });
-  });
+  function load_plugins() {
+  	if (pluginsAndThemesLoadEnabled == true) {
+  		// Dragoncord
+	    fs.readdir('./dragoncord/js', function (err, files) {
+	      if (err) {
+	        console.log('[Error] Unable to scan directory: ' + err);
+	      }
+	      files.forEach(function (file) {
+	        const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+	        main.webContents.executeJavaScript(pluginsToLoad);
+	        console.log('[Dragoncord JS] Loaded: ' + file);
+	      });
+	    });
 
-  fs.readdir('./dragoncord/css', function (err, files) {
-    if (err) {
-      console.log('[Error] Unable to scan directory: ' + err);
-    }
-    files.forEach(function (file) {
-      const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
-      main.webContents.insertCSS(themeToLoad);
-      console.log('[Dragoncord CSS] Loaded: ' + file);
-    });
-  });
+	    fs.readdir('./dragoncord/css', function (err, files) {
+	      if (err) {
+	        console.log('[Error] Unable to scan directory: ' + err);
+	      }
+	      files.forEach(function (file) {
+	        const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
+	        main.webContents.insertCSS(themeToLoad);
+	        console.log('[Dragoncord CSS] Loaded: ' + file);
+	      });
+	    });
 
-  // Plugins
-  fs.readdir('./plugins', function (err, files) {
-    if (err) {
-      console.log('[Error] Unable to scan directory: ' + err);
-    }
-    files.forEach(function (file) {
-      const pluginsToLoad = fs.readFileSync('./plugins/' + file).toString();
-      main.webContents.executeJavaScript(pluginsToLoad);
-      console.log('[Plugin] Loaded: ' + file);
-    });
-  });
+	    // Plugins
+	    fs.readdir('./plugins', function (err, files) {
+	      if (err) {
+	        console.log('[Error] Unable to scan directory: ' + err);
+	      }
+	      files.forEach(function (file) {
+	        const pluginsToLoad = fs.readFileSync('./plugins/' + file).toString();
+	        main.webContents.executeJavaScript(pluginsToLoad);
+	        console.log('[Plugin] Loaded: ' + file);
+	      });
+	    });
 
-  // Themes
-  fs.readdir('./themes', function (err, files) {
-    if (err) {
-      console.log('[Error] Unable to scan directory: ' + err);
-    }
-    files.forEach(function (file) {
-      const themeToLoad = fs.readFileSync('./themes/' + file).toString();
-      main.webContents.insertCSS(themeToLoad);
-      console.log('[Theme] Loaded: ' + file);
-    });
-  });
+	    // Themes
+	    fs.readdir('./themes', function (err, files) {
+	      if (err) {
+	        console.log('[Error] Unable to scan directory: ' + err);
+	      }
+	      files.forEach(function (file) {
+	        const themeToLoad = fs.readFileSync('./themes/' + file).toString();
+	        main.webContents.insertCSS(themeToLoad);
+	        console.log('[Theme] Loaded: ' + file);
+	      });
+	    });
+	  }
+	  else {
+	    console.log('Plugins and themes not loaded. Save mode enabled');
+	  }
+	}
 
-  console.log('[Discord] Starting Discord');
+  console.log('[Dragoncord] Loading...');
+  load_plugins();
+  
   // Settings
   main.setKiosk(config.KIOSK);
   main.setOpacity(config.WINDOW_OPACITY);
   main.setAlwaysOnTop(config.ALWAYS_ON_TOP);
 
-  // Loads Discord
   attachTitlebarToWindow(main);
   var menu = Menu.buildFromTemplate([
   {
@@ -112,12 +133,13 @@ function createWindow() {
     submenu: [
     {
       label: 'Config', 
-      click() { 
+      click() {
         spawnObj('notepad.exe', ["config.json"]);
       },
       label: 'About', 
       click() {
         main.webContents.loadFile('./dragoncord/pages/about/index.html');
+        load_plugins();
       }
     }]
   },
@@ -128,18 +150,21 @@ function createWindow() {
       label: 'Discord', 
       click() {
         main.webContents.loadURL('https://discord.com/app');
+        load_plugins();
       }
     },
     {
       label: 'Discord PTB', 
       click() {
         main.webContents.loadURL('https://ptb.discord.com/app');
+        load_plugins();
       }
     },
     {
       label: 'Discord Canary', 
       click() {
         main.webContents.loadURL('https://canary.discord.com/app');
+        load_plugins();
       }
     },
     {
@@ -152,6 +177,7 @@ function createWindow() {
       label: "Custom: " + config.DCORD_ENDPOINT, 
       click() {
         main.webContents.loadURL(config.DCORD_ENDPOINT);
+        load_plugins();
       }
     }
     ]
@@ -167,8 +193,10 @@ function createWindow() {
     }]
   }
   ])
-  Menu.setApplicationMenu(menu); 
-  main.webContents.loadURL(config.DCORD_ENDPOINT + '/app');
+  Menu.setApplicationMenu(menu);
+
+  console.log('[Discord] Loading Discord');
+  main.loadURL(config.DCORD_ENDPOINT + "/app");
 }
 
 // Events
@@ -183,26 +211,27 @@ app.on('crashed', (e) => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-})
+});
 
 app.on('minimize', () => {
   main.blurWebView();
-})
+});
 
 // Load App
 app.whenReady().then(() => {
   createWindow();
 
   // Tray
-  tray = new Tray(config.TRAY_ICON)
+  tray = new Tray(config.TRAY_ICON);
   const contextMenu = Menu.buildFromTemplate([
     { label: config.WEBAPP_TITLE, enabled: false },
     { type: "separator" },
+    { label: 'Check for Updates...' },
     { label: 'Acknowledgements', click: function () { open(config.DCORD_ENDPOINT + '/acknowledgements'); } },
     { type: "separator" },
     { label: 'Quit ' + config.WEBAPP_TITLE, click: function () { app.quit(); } }
   ])
-  tray.setToolTip(config.WEBAPP_TITLE)
-  tray.setTitle(config.WEBAPP_TITLE)
-  tray.setContextMenu(contextMenu)
+  tray.setToolTip(config.WEBAPP_TITLE);
+  tray.setTitle(config.WEBAPP_TITLE);
+  tray.setContextMenu(contextMenu);
 })
