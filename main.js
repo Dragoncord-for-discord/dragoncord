@@ -1,3 +1,5 @@
+console.log('Please wait, we are loading :)');
+
 var config = require('./config.json');
 
 // Libs
@@ -25,7 +27,7 @@ setupTitlebar();
 
 if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can make some problems and errors!'); }
 
-console.log('Dragoncord By DragonFire | Web Client | Alpha 28.03.2022');
+console.log('Dragoncord By DragonFire | Web Client');
 console.log('Endpoint: ' + config.DCORD_ENDPOINT);
 
 let main;
@@ -64,7 +66,7 @@ function createWindow() {
   })
   require("@electron/remote/main").enable(main.webContents);
 
-  async function load_plugins() {
+  function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
 	    fs.readdir('./dragoncord/js', function (err, files) {
@@ -147,7 +149,16 @@ function createWindow() {
       label: 'Config', 
       click() {
         spawnObj('notepad.exe', ["config.json"]);
-      },
+      }
+    },
+    {
+      label: 'Reload plugins/themes',
+      accelerator: process.platform === 'darwin' ? 'Alt+Cmd+Z' : 'Alt+Shift+Z',
+      click() {
+        load_plugins();
+      }
+    },
+    {
       label: 'About', 
       click() {
         main.webContents.loadFile('./dragoncord/pages/about/index.html');
@@ -198,7 +209,8 @@ function createWindow() {
     label: 'Development',
     submenu: [
     {
-      label: 'Developer Tools', 
+      label: 'Developer Tools',
+      accelerator: process.platform === 'darwin' ? 'Ctrl+Cmd+C' : 'Ctrl+Shift+C',
       click() { 
         main.webContents.openDevTools();
       }
