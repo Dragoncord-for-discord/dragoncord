@@ -159,6 +159,14 @@ function createWindow() {
       }
     },
     {
+      label: 'Update', 
+      click() {
+        spawnObj('npm run update');
+        app.quit();
+        app.relaunch();
+      }
+    },
+    {
       label: 'About', 
       click() {
         main.webContents.loadFile('./dragoncord/pages/about/index.html');
@@ -250,6 +258,7 @@ app.whenReady().then(() => {
   const contextMenu = Menu.buildFromTemplate([
     { label: config.WEBAPP_TITLE, enabled: false },
     { type: "separator" },
+    { label: 'Relaunch without console', click: function () { app.quit(); app.relaunch(); } },
     { label: 'Acknowledgements', click: function () { open(config.DCORD_ENDPOINT + '/acknowledgements'); } },
     { type: "separator" },
     { label: 'Quit ' + config.WEBAPP_TITLE, click: function () { app.quit(); } }

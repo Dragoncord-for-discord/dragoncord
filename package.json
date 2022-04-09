@@ -4,9 +4,10 @@
   "description": "Dragoncord | Something better than default discord",
   "main": "main.js",
   "scripts": {
-    "dragoncord:start": "electron .",
-    "dragoncord:plug": "echo Plug not support & exit",
-    "dragoncord:unplug": "echo Unplug not support & exit"
+    "start": "electron .",
+    "update": "echo Please wait... & git pull & echo Dragoncord Updated! Restart client to apply changes",
+    "plug": "echo Plug not support & exit",
+    "unplug": "echo Unplug not support & exit"
   },
   "author": "dragonfire-community",
   "license": "ISC",
