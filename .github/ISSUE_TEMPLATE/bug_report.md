@@ -26,6 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Debug info**
  - Node Version: 
  - System Version: 
+ - Dragoncord Version: 
 
 **Additional context**
 Add any other context about the problem here.
