@@ -8,7 +8,7 @@ const path = require('path');
 const fs = require("fs");
 const open = require('open');
 const { setupTitlebar, attachTitlebarToWindow, Titlebar } = require("custom-electron-titlebar/main");
-const spawnObj = require('child_process').spawn;
+const { spawn, exec } = require("child_process");
 
 const myArgs = process.argv.slice(2); // Args
 
@@ -156,14 +156,6 @@ function createWindow() {
       accelerator: process.platform === 'darwin' ? 'Alt+Cmd+Z' : 'Alt+Shift+Z',
       click() {
         load_plugins();
-      }
-    },
-    {
-      label: 'Update', 
-      click() {
-        spawnObj('npm run update');
-        app.quit();
-        app.relaunch();
       }
     },
     {
