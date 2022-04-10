@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "plug": "echo Plug not support & exit",
-    "unplug": "echo Unplug not support & exit"
+    "unplug": "echo Unplug not support & exit",
+    "update": "git pull"
   },
   "author": "dragonfire-community",
   "license": "ISC",
