@@ -97,8 +97,8 @@ function createWindow() {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
 	      files.forEach(function (file) {
-	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file).toString();
-	        require('./dcord_node_plugins/' + file);
+	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file + '/' + 'main.js').toString();
+	        require('./dcord_node_plugins/' + file + '/' + 'main.js');
 	        console.log('[Node Plugin] Loaded: ' + file);
 	      });
 	    });
@@ -109,7 +109,7 @@ function createWindow() {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
 	      files.forEach(function (file) {
-	        const pluginsToLoad = fs.readFileSync('./plugins/' + file).toString();
+	        const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
 	        main.webContents.executeJavaScript(pluginsToLoad);
 	        console.log('[Plugin] Loaded: ' + file);
 	      });
@@ -121,7 +121,7 @@ function createWindow() {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
 	      files.forEach(function (file) {
-	        const themeToLoad = fs.readFileSync('./themes/' + file).toString();
+	        const themeToLoad = fs.readFileSync('./themes/' + file + '/' + 'main.css').toString();
 	        main.webContents.insertCSS(themeToLoad);
 	        console.log('[Theme] Loaded: ' + file);
 	      });
