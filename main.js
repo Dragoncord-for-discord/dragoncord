@@ -54,12 +54,12 @@ function createWindow() {
       // Settings
       experimentalFeatures: config.EXPERIMENTAL_FEATURES,
       experimentalCanvasFeatures: config.EXPERIMENTAL_FEATURES,
-      directWrite: true,
-      enableRemoteModule: true,
+      directWrite: config.DIRECT_WRITE,
+      enableRemoteModule: config.ENABLE_REMOTE_MODULE,
       devTools: config.DEVELOPER_TOOLS,
-      javascript: true,
+      javascript: config.JAVASCRIPT,
       webgl: config.ENABLE_WEBGL,
-      plugins: true,
+      plugins: config.PLUGINS,
       webaudio: config.ENABLE_WEBAUDIO,
       enableWebSQL: config.ENABLE_WEBSQL
     }
@@ -221,6 +221,7 @@ function createWindow() {
 
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
+  //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
 }
 
 // Events
