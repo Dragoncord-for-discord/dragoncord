@@ -7,7 +7,7 @@
 	"DEFAULT_HEIGHT": 720,
 
 	"BACKGROUND_COLOR": "#36393F",
-	"WINDOW_OPACITY": 0.95,
+	"WINDOW_OPACITY": 0.98,
 	"KIOSK": false,
 	"ALWAYS_ON_TOP": false,
 
@@ -22,5 +22,6 @@
 	"PLUGINS":  true,
 	"DIRECT_WRITE": true,
 	"ENABLE_REMOTE_MODULE": true,
-	"JAVASCRIPT": true
+	"JAVASCRIPT": true,
+	"WEBVIEW_TAG": true
 }

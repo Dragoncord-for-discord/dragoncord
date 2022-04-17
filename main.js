@@ -3,7 +3,21 @@ console.log('Please wait, we are loading :)');
 var config = require('./config.json');
 
 // Libs
-const { app, BrowserWindow, webContents, Menu, Tray, Notification, dialog } = require('electron');
+const {
+	app,
+	BrowserWindow,
+	webContents,
+	Menu,
+	Tray,
+	Notification,
+	dialog,
+	ipcRenderer,
+	session,
+	net,
+	ipcMain,
+	desktopCapturer,
+	BrowserView
+} = require('electron');
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
@@ -61,7 +75,8 @@ function createWindow() {
       webgl: config.ENABLE_WEBGL,
       plugins: config.PLUGINS,
       webaudio: config.ENABLE_WEBAUDIO,
-      enableWebSQL: config.ENABLE_WEBSQL
+      enableWebSQL: config.ENABLE_WEBSQL,
+      webviewTag: config.WEBVIEW_TAG
     }
   })
   require("@electron/remote/main").enable(main.webContents);
@@ -214,7 +229,8 @@ function createWindow() {
       click() { 
         main.webContents.openDevTools();
       }
-    }]
+    }
+    ]
   }
   ])
   Menu.setApplicationMenu(menu);
@@ -222,6 +238,21 @@ function createWindow() {
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
   //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
+
+  // Anti-Telemetry
+  main.webContents.session.webRequest.onBeforeRequest(
+  {
+  	urls: [
+	  	'https://*/api/*/science',
+	  	'https://*/api/*/track'
+  	]
+  },
+  (details, callback) => {
+  	const url = new URL(details.url);
+  	if (url.pathname.endsWith('/science') || url.pathname.endsWith('/track')) { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0;} 
+  	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0; }
+  },
+  );
 }
 
 // Events
@@ -259,4 +290,4 @@ app.whenReady().then(() => {
   tray.setToolTip(config.WEBAPP_TITLE);
   tray.setTitle(config.WEBAPP_TITLE);
   tray.setContextMenu(contextMenu);
-})
+});
