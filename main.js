@@ -46,6 +46,11 @@ console.log('Endpoint: ' + config.DCORD_ENDPOINT);
 
 let main;
 
+function start_failed(error_message) {
+  console.error('[CRITICAL ERROR] Dragoncord Start Failed!');
+  console.error('[CRITICAL ERROR] ' + error_message);
+}
+
 // Window
 function createWindow() {
   const main = new BrowserWindow({
@@ -87,23 +92,41 @@ function createWindow() {
 	    fs.readdir('./dragoncord/js', function (err, files) {
 	      if (err) {
 	        console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/js/ is missing! Please redownload Dragoncord!");
 	      }
-	      files.forEach(function (file) {
-	        const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-	        main.webContents.executeJavaScript(pluginsToLoad);
-	        console.log('[Dragoncord JS] Loaded: ' + file);
-	      });
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord JS] Folder is empty');
+            start_failed("/dragoncord/js/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+    	      files.forEach(function (file) {
+    	        const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+    	        main.webContents.executeJavaScript(pluginsToLoad);
+    	        console.log('[Dragoncord JS] Loaded: ' + file);
+    	      });
+          }
+        }
 	    });
 
 	    fs.readdir('./dragoncord/css', function (err, files) {
 	      if (err) {
 	        console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
 	      }
-	      files.forEach(function (file) {
-	        const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
-	        main.webContents.insertCSS(themeToLoad);
-	        console.log('[Dragoncord CSS] Loaded: ' + file);
-	      });
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord CSS] Folder is empty');
+            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+    	      files.forEach(function (file) {
+    	        const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
+    	        main.webContents.insertCSS(themeToLoad);
+    	        console.log('[Dragoncord CSS] Loaded: ' + file);
+    	      });
+          }
+        }
 	    });
 
 	    // Node Plugins
@@ -111,11 +134,16 @@ function createWindow() {
 	      if (err) {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
-	      files.forEach(function (file) {
-	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file + '/' + 'main.js').toString();
-	        require('./dcord_node_plugins/' + file + '/' + 'main.js');
-	        console.log('[Node Plugin] Loaded: ' + file);
-	      });
+        else {
+          if (!files.length) { console.log('[Node Plugin] Folder is empty'); }
+          else {
+    	      files.forEach(function (file) {
+    	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file + '/' + 'main.js').toString();
+    	        require('./dcord_node_plugins/' + file + '/' + 'main.js');
+    	        console.log('[Node Plugin] Loaded: ' + file);
+    	      });
+          }
+        }
 	    });
 
 	    // Plugins
@@ -123,11 +151,16 @@ function createWindow() {
 	      if (err) {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
-	      files.forEach(function (file) {
-	        const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
-	        main.webContents.executeJavaScript(pluginsToLoad);
-	        console.log('[Plugin] Loaded: ' + file);
-	      });
+        else {
+          if (!files.length) { console.log('[Plugin] Folder is empty'); }
+          else {
+    	      files.forEach(function (file) {
+    	        const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
+    	        main.webContents.executeJavaScript(pluginsToLoad);
+    	        console.log('[Plugin] Loaded: ' + file);
+    	      });
+          }
+        }
 	    });
 
 	    // Themes
@@ -135,11 +168,16 @@ function createWindow() {
 	      if (err) {
 	        console.log('[Error] Unable to scan directory: ' + err);
 	      }
-	      files.forEach(function (file) {
-	        const themeToLoad = fs.readFileSync('./themes/' + file + '/' + 'main.css').toString();
-	        main.webContents.insertCSS(themeToLoad);
-	        console.log('[Theme] Loaded: ' + file);
-	      });
+        else {
+          if (!files.length) { console.log('[Theme] Folder is empty'); }
+          else {
+    	      files.forEach(function (file) {
+    	        const themeToLoad = fs.readFileSync('./themes/' + file + '/' + 'main.css').toString();
+    	        main.webContents.insertCSS(themeToLoad);
+    	        console.log('[Theme] Loaded: ' + file);
+    	      });
+          }
+        }
 	    });
 	  }
 	  else {
@@ -167,6 +205,12 @@ function createWindow() {
       }
     },
     {
+      label: 'Settings (Alpha)', 
+      click() {
+        main.webContents.loadFile('./dragoncord/pages/settings/index.html');
+      }
+    },
+    {
       label: 'Reload plugins/themes',
       accelerator: process.platform === 'darwin' ? 'Alt+Cmd+Z' : 'Alt+Shift+Z',
       click() {
@@ -177,7 +221,6 @@ function createWindow() {
       label: 'About', 
       click() {
         main.webContents.loadFile('./dragoncord/pages/about/index.html');
-        load_plugins();
       }
     }]
   },
@@ -243,6 +286,7 @@ function createWindow() {
   main.webContents.session.webRequest.onBeforeRequest(
   {
   	urls: [
+      //'https://*/api/*/channels/*/typing',
 	  	'https://*/api/*/science',
 	  	'https://*/api/*/track'
   	]
@@ -250,6 +294,8 @@ function createWindow() {
   (details, callback) => {
   	const url = new URL(details.url);
   	if (url.pathname.endsWith('/science') || url.pathname.endsWith('/track')) { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0;} 
+    //else if (url.pathname.endsWith('/typing')) { console.debug('[Dragoncord] Typing disabled: ' + url.pathname); return 0;}
+    //else if (url.pathname.startsWith('wss://')) { console.debug('[Dragoncord] WSS disabled: ' + url.pathname); return 0;}
   	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0; }
   },
   );
@@ -270,6 +316,12 @@ app.on('window-all-closed', () => {
 });
 
 app.on('minimize', () => {
+  console.log('minimize');
+  main.blurWebView();
+});
+
+app.on('blur', () => {
+  console.log('blur');
   main.blurWebView();
 });
 
