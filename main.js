@@ -11,10 +11,10 @@ const {
 	Tray,
 	Notification,
 	dialog,
+  ipcMain,
 	ipcRenderer,
 	session,
 	net,
-	ipcMain,
 	desktopCapturer,
 	BrowserView
 } = require('electron');
@@ -47,8 +47,8 @@ console.log('Endpoint: ' + config.DCORD_ENDPOINT);
 let main;
 
 function start_failed(error_message) {
-  console.error('[CRITICAL ERROR] Dragoncord Start Failed!');
-  console.error('[CRITICAL ERROR] ' + error_message);
+  console.error('[START FAILED] Dragoncord Start Failed!');
+  console.error('[START FAILED] ' + error_message);
 }
 
 // Window
@@ -89,25 +89,6 @@ function createWindow() {
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
-	    fs.readdir('./dragoncord/js', function (err, files) {
-	      if (err) {
-	        console.log('[Error] Unable to scan directory: ' + err);
-          start_failed("/dragoncord/js/ is missing! Please redownload Dragoncord!");
-	      }
-        else {
-          if (!files.length) {
-            console.log('[Dragoncord JS] Folder is empty');
-            start_failed("/dragoncord/js/ folder is empty! Please redownload Dragoncord!");
-          }
-          else {
-    	      files.forEach(function (file) {
-    	        const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-    	        main.webContents.executeJavaScript(pluginsToLoad);
-    	        console.log('[Dragoncord JS] Loaded: ' + file);
-    	      });
-          }
-        }
-	    });
 
 	    fs.readdir('./dragoncord/css', function (err, files) {
 	      if (err) {
@@ -201,13 +182,7 @@ function createWindow() {
     {
       label: 'Config', 
       click() {
-        spawnObj('notepad.exe', ["config.json"]);
-      }
-    },
-    {
-      label: 'Settings (Alpha)', 
-      click() {
-        main.webContents.loadFile('./dragoncord/pages/settings/index.html');
+        spawn('notepad.exe', ["config.json"]);
       }
     },
     {
@@ -295,7 +270,6 @@ function createWindow() {
   	const url = new URL(details.url);
   	if (url.pathname.endsWith('/science') || url.pathname.endsWith('/track')) { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0;} 
     //else if (url.pathname.endsWith('/typing')) { console.debug('[Dragoncord] Typing disabled: ' + url.pathname); return 0;}
-    //else if (url.pathname.startsWith('wss://')) { console.debug('[Dragoncord] WSS disabled: ' + url.pathname); return 0;}
   	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0; }
   },
   );
@@ -316,12 +290,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('minimize', () => {
-  console.log('minimize');
   main.blurWebView();
 });
 
 app.on('blur', () => {
-  console.log('blur');
   main.blurWebView();
 });
 

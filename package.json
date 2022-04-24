@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "plug": "node injectors/index.js plug",
+    "plug": "cd injectors & node index.js plug",
     "unplug": "echo Unplug not support & exit",
     "update": "git pull"
   },
