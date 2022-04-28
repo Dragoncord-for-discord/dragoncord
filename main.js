@@ -295,9 +295,9 @@ function createWindow() {
   },
   (details, callback) => {
   	const url = new URL(details.url);
-  	if (url.pathname.endsWith('/science') || url.pathname.endsWith('/track')) { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0;} 
+  	if (url.pathname.endsWith('/science') || url.pathname.endsWith('/track')) { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return callback({cancel: true});} 
     //else if (url.pathname.endsWith('/typing')) { console.debug('[Dragoncord] Typing disabled: ' + url.pathname); return 0;}
-  	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return 0; }
+  	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return callback({cancel: true}); }
   },
   );
 }
