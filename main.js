@@ -207,6 +207,12 @@ function createWindow() {
     	}
     },
     {
+      label: 'Settings', 
+      click() {
+        main.webContents.loadFile('./dragoncord/pages/settings/index.html');
+      }
+    },
+    {
       label: 'Config', 
       click() {
         spawn('notepad.exe', ["config.json"]);

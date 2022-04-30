@@ -1,20 +1,49 @@
 html {
-    background-color: #36393F;
+    background-color: #202225;
 }
 
 * {
-    font-family: Arial;
-    font-size: 18px;
+    font-family: Microsoft YaHei UI Light;
+    font-size: 20px;
+}
+
+.header {
+    font-size: 27px;
 }
 
 * {
     color: white;
 }
 
-img {
-    border-radius: 20px;
+/* Setting buttons */
+.setting {
+    cursor: pointer;
 }
 
-hr {
-    color: rgba(255, 255, 255, 0);
+.setting:hover {
+    background-color: #484848;
+}
+
+.setting:active {
+    background-color: #717171;
+}
+
+/* Split divs */
+.settings-options {
+    padding: 0;
+    margin: 0;
+
+    width: 30%;
+    min-height: 100vh;
+    background-color: #484848;
+    float: left;
+}
+.settings-content {
+    padding: 0;
+    margin: 0;
+
+    width: 70%;
+    min-height: 100vh;
+    background-color: #717171;
+    margin-left: 70%;
 }
