@@ -21,7 +21,7 @@ html {
 }
 
 .setting:hover {
-    background-color: #484848;
+    background-color: #565656;
 }
 
 .setting:active {
@@ -37,13 +37,9 @@ html {
     min-height: 100vh;
     background-color: #484848;
     float: left;
+    padding-left: 16px;
 }
-.settings-content {
-    padding: 0;
-    margin: 0;
-
-    width: 70%;
-    min-height: 100vh;
-    background-color: #717171;
-    margin-left: 70%;
+#settings-content {
+	float: left;
+	padding-left: 16px;
 }
