@@ -107,3 +107,31 @@
 	animation: fadeInDown;
 	animation-duration: 0.5s;
 }
+
+/* Settings */
+.item-3XjbnG {
+	animation: fadeInLeft;
+	animation-duration: var(--animation-duration-dcord);
+}
+
+.header-2Kx1US {
+	animation: fadeInLeft;
+	animation-duration: calc(var(--animation-duration-dcord) + 0.5s);
+}
+
+/* Profile info */
+.userInfoSection-3her-v,
+.bodyInnerWrapper-2bQs1k {
+	animation: fadeInDown;
+	animation-duration: 1s;
+}
+
+.profileBadges-2pItdR {
+	animation: fadeInRight;
+	animation-duration: 1s;
+}
+
+.inputWrapper-1YNMmM {
+	animation: fadeInUp;
+	animation-duration: 0.5s;
+}

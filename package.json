@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "plug": "cd injectors & node index.js plug",
-    "unplug": "echo Unplug not support & exit",
+    "unplug": "cd injectors & node index.js unplug",
     "update": "git pull"
   },
   "repository": "https://github.com/Dragoncord-for-discord/dragoncord.git",

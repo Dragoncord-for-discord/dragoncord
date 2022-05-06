@@ -16,15 +16,19 @@ html {
 }
 
 /* Setting buttons */
-.setting {
-    cursor: pointer;
-}
-
 .setting:hover {
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	
     background-color: #565656;
 }
 
 .setting:active {
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+
     background-color: #717171;
 }
 

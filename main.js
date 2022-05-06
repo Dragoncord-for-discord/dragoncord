@@ -6,25 +6,22 @@ var config = require('./config.json');
 const {
 	app,
 	BrowserWindow,
-	webContents,
 	Menu,
 	Tray,
-	Notification,
-	dialog,
-  ipcMain,
-	ipcRenderer,
-	session,
-	net,
-	desktopCapturer,
-	BrowserView
+  session
 } = require('electron');
 const Sentry = require("@sentry/electron");
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
-const { setupTitlebar, attachTitlebarToWindow, Titlebar } = require("custom-electron-titlebar/main");
-const { spawn, exec } = require("child_process");
+const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
+const { spawn } = require("child_process");
+//const wrtc = require('electron-webrtc')();
 
+// WebRTC
+//wrtc.on('error', function (err) { console.log(err) })
+
+process.env.PULSE_LATENCY_MSEC = "30";
 const myArgs = process.argv.slice(2); // Args
 
 switch (myArgs[0]) {
@@ -40,10 +37,7 @@ switch (myArgs[0]) {
 
 setupTitlebar();
 
-if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can make some problems and errors!'); }
-
-console.log('Dragoncord By DragonFire | Web Client');
-console.log('Endpoint: ' + config.DCORD_ENDPOINT);
+if (config.NODE_INTEGRATION == false) { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', 'You running Dragoncord without nodeIntegration. This can cause some problems and errors!'); }
 
 let main;
 
@@ -54,6 +48,9 @@ function start_failed(error_message) {
 
 Sentry.init({ dsn: "https://40ded2891df94cbab50bc7d3b14a8270@o1216346.ingest.sentry.io/6365775" });
 
+console.log('Dragoncord By DragonFire | Web Client');
+console.log('Endpoint: ' + config.DCORD_ENDPOINT);
+
 // Window
 function createWindow() {
   const main = new BrowserWindow({
@@ -63,6 +60,7 @@ function createWindow() {
     icon: config.APP_ICON,
     darkTheme: true,
     frame: false,
+    center: true,
     webPreferences: {
       title: config.WEBAPP_TITLE,
       preload: path.join(__dirname, 'preload.js'),
@@ -140,7 +138,6 @@ function createWindow() {
           if (!files.length) { console.log('[Node Plugin] Folder is empty'); }
           else {
     	      files.forEach(function (file) {
-    	        const pluginsToLoad = fs.readFileSync('./dcord_node_plugins/' + file + '/' + 'main.js').toString();
     	        require('./dcord_node_plugins/' + file + '/' + 'main.js');
     	        console.log('[Node Plugin] Loaded: ' + file);
     	      });
@@ -159,6 +156,7 @@ function createWindow() {
 	    	      files.forEach(function (file) {
 	    	        const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
 	    	        main.webContents.executeJavaScript(pluginsToLoad);
+	    	        main.webContents.executeJavaScript("document.getElementById('plugins-list').innerHTML = document.getElementById('plugins-list').innerHTML + " + "<p>" + file + "</p>" + ";")
 	    	        console.log('[Plugin] Loaded: ' + file);
 	    	      });
 	          }
@@ -289,15 +287,20 @@ function createWindow() {
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
   //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
+  //main.webContents.loadFile('./dragoncord/pages/splashscreen/index.html');
+
+  // WebRTC and Voice
+  main.webContents.setWebRTCIPHandlingPolicy("default_public_and_private_interfaces")
+  session.fromPartition("default").setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
 
   // Anti-Telemetry
   main.webContents.session.webRequest.onBeforeRequest(
   {
-  	urls: [
+    urls: [
       //'https://*/api/*/channels/*/typing',
-	  	'https://*/api/*/science',
-	  	'https://*/api/*/track'
-  	]
+      'https://*/api/*/science',
+      'https://*/api/*/track'
+    ]
   },
   (details, callback) => {
   	const url = new URL(details.url);
@@ -309,21 +312,17 @@ function createWindow() {
 }
 
 // Events
-app.on('unresponsive', (e) => {
+app.on('unresponsive', () => {
   console.log('[Error] Dragoncord has detected an error. Dragoncord does not seem to be responding.');
 });
 
-app.on('crashed', (e) => {
+app.on('crashed', () => {
   console.log('[Error] Dragoncord is crashed! Restarting...');
   app.relaunch();
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('minimize', () => {
-  main.blurWebView();
 });
 
 app.on('blur', () => {
@@ -337,9 +336,9 @@ app.whenReady().then(() => {
   // Tray
   tray = new Tray(config.TRAY_ICON);
   const contextMenu = Menu.buildFromTemplate([
-    { label: config.WEBAPP_TITLE, enabled: false },
+    { label: config.WEBAPP_TITLE, enabled: false, icon: 'dragoncord/discord/images/tray.png' },
     { type: "separator" },
-    { label: 'Relaunch without console', click: function () { app.quit(); app.relaunch(); } },
+    { label: 'Relaunch', click: function () { app.quit(); app.relaunch(); } },
     { label: 'Acknowledgements', click: function () { open(config.DCORD_ENDPOINT + '/acknowledgements'); } },
     { type: "separator" },
     { label: 'Quit ' + config.WEBAPP_TITLE, click: function () { app.quit(); } }
