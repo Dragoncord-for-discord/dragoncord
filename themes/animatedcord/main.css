@@ -135,3 +135,9 @@
 	animation: fadeInUp;
 	animation-duration: 0.5s;
 }
+
+/* Dragoncord */
+.notification {
+	animation: bounceInRight;
+	animation-duration: 1s;
+}

@@ -3,25 +3,31 @@ html {
 }
 
 * {
-    font-family: Microsoft YaHei UI Light;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
+    color: white;
 }
 
 .header {
     font-size: 27px;
 }
 
-* {
-    color: white;
+.avatar {
+	border-radius: 20px;
 }
 
 /* Setting buttons */
+.setting {
+	padding-left: 5px;
+}
+
 .setting:hover {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
 	
     background-color: #565656;
+    cursor: pointer;
 }
 
 .setting:active {
@@ -46,4 +52,86 @@ html {
 #settings-content {
 	float: left;
 	padding-left: 16px;
+}
+
+/* Restart required */
+.restart-required {
+	padding-top: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
+
+	max-width: 600px;
+
+	border-radius: 5px;
+	background-color: #ED4245;
+	display: block;
+   	display: flex;
+   	align-items:center;
+}
+
+.require-restart-text {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/* Not finished */
+.not-finished {
+	padding-top: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
+
+	max-width: 600px;
+
+	border-radius: 5px;
+	background-color: #FEE75C;
+	display: block;
+   	display: flex;
+   	align-items:center;
+}
+
+.not-finished-text {
+	/*color: black;*/
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.not-finished-svg {
+	color: black;
+}
+
+/* Restart required */
+.error-message {
+	padding-top: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
+
+	max-width: 600px;
+
+	border-radius: 5px;
+	background-color: #ED4245;
+	display: block;
+   	display: flex;
+   	align-items:center;
+}
+
+.error-message-text {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+button {
+	color: black;
+}
+
+* {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.black {
+	color: black;
 }

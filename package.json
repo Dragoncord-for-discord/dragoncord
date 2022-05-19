@@ -7,13 +7,14 @@
     "start": "electron .",
     "plug": "cd injectors & node index.js plug",
     "unplug": "cd injectors & node index.js unplug",
-    "update": "git pull"
+    "update": "git pull",
+    "settings-server": "python ./dragoncord/pages/settings/settings-server.py"
   },
   "repository": "https://github.com/Dragoncord-for-discord/dragoncord.git",
   "author": "dragonfire-community",
   "license": "ISC",
   "devDependencies": {
-    "electron": "15.5.2",
+    "electron": "15.5.4",
     "electron-packager": "^15.5.0"
   },
   "dependencies": {

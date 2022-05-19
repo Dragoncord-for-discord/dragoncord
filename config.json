@@ -13,7 +13,7 @@
 
 	"EXPERIMENTAL_FEATURES": true,
 	"DEVELOPER_TOOLS": true,
-	"NODE_INTEGRATION": true,
+	"//NODE_INTEGRATION": "Now removed because if you disable it, app is fully broken",
 	"ENABLE_WEBSQL": true,
 	"ENABLE_WEBGL": true,
 	"ENABLE_WEBAUDIO": true,

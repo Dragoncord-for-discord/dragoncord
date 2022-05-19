@@ -5,20 +5,23 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Dragoncord | Settings</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
+    <link rel='stylesheet' onerror="window.location.href='loadError.html';" type='text/css' media='screen' href='main.css'>
+    <script src='main.js' onerror="window.location.href='loadError.html';" nodeIntegration></script>
+    <script src='Dragoncord.api.js' type="text/javascript" onerror="window.location.href='loadError.html';"></script>
 </head>
 <body>
-    <div class="settings-options">
-        <h3 class="header">Dragoncord</h3>
-        <p class="setting" onclick="about();">About</p>
-        <p class="setting" onclick="settings();">Settings</p>
-        <p class="setting" onclick="plugins_list();">Plugins</p>
-        <p class="setting" onclick="themes_list();">Themes</p>
-    </div>
-    <div id="settings-content">
-        <h1>Dragoncord</h1>
-        <p>Select option</p>
-    </div>
+	<div class="settings-options">
+		<h3 class="header">Dragoncord</h3>
+		<p class="setting" onclick="about();">About</p>
+		<p class="setting" onclick="settings();">Settings</p>
+		<p class="setting" onclick="plugins_list();">Plugins</p>
+		<p class="setting" onclick="themes_list();">Themes</p>
+		<p class="setting" onclick="updater();">Updater</p>
+		<p class="setting" id="renderErrorDemoSetting" onclick="render_error_demo();">Render Error Demo</p>
+	</div>
+	<div id="settings-content">
+		<h1>Dragoncord</h1>
+		<p>Select option</p>
+	</div>
 </body>
 </html>

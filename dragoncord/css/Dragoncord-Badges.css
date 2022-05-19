@@ -1,19 +1,26 @@
+/* Official servers */
 /* Dragoncord Server Title */
+[aria-label^="Dragoncord Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/attachments/872487083015548940/959529851071655946/logo.png") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
+[aria-label^="Dragoncord Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after { content: "Official DF Community Server"; font-size: 12px; position: absolute; background-color: var(--background-floating); padding: 5px 10px; border-radius: 4px; opacity: 0; display: none; animation: tooltip .5s forwards;}
+[aria-label^="Dragoncord Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block; }
 
-[aria-label^="Dragoncord"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/attachments/872487083015548940/959529851071655946/logo.png") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
-[aria-label^="Dragoncord"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after { content: "Official Dragoncord Server"; font-size: 12px; position: absolute; background-color: var(--background-floating); padding: 5px 10px; border-radius: 4px; opacity: 0; display: none; animation: tooltip .5s forwards;}
-[aria-label^="Dragoncord"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block; }
+/* DFriends */
+[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/emojis/919143455148613663.gif") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
+[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after {content: "Official DF Community Server"; font-size: 12px; position: absolute; background-color: var(--background-floating); padding: 5px 10px; border-radius: 4px; opacity: 0; display: none; animation: tooltip .5s forwards;}
+[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block;}
+
+/* DragonFire Community */
+[aria-label^="DragonFire Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/emojis/919143455148613663.gif") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
+[aria-label^="DragonFire Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after {content: "Official DF Community Server"; font-size: 12px; position: absolute; background-color: var(--background-floating); padding: 5px 10px; border-radius: 4px; opacity: 0; display: none; animation: tooltip .5s forwards;}
+[aria-label^="DragonFire Community"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block;}
 
 
 
-
-
+/* Partners */
 /* Windows Land */
-
 [aria-label^="WindowsLand"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/emojis/919143455148613663.gif") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
-
 [aria-label^="WindowsLand"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after {
-    content: "This server is verified by DragonFire Community";
+    content: "Partnered by DF Community";
     font-size: 12px;
     position: absolute;
     background-color: var(--background-floating);
@@ -25,13 +32,17 @@
 }
 [aria-label^="WindowsLand"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block;}
 
-
-
-
-
-
-
-/* DFriends */
-[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/emojis/919143455148613663.gif") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
-[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after {content: "This server is verified by DragonFire Community"; font-size: 12px; position: absolute; background-color: var(--background-floating); padding: 5px 10px; border-radius: 4px; opacity: 0; display: none; animation: tooltip .5s forwards;}
-[aria-label^="DFriends"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block;}
+/* 𝙎𝙬𝙚𝙚𝙩𝙮𝘿𝙧𝙚𝙖𝙢 ♡ */
+[aria-label^="𝙎𝙬𝙚𝙚𝙩𝙮𝘿𝙧𝙚𝙖𝙢 ♡"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::before { content: ""; background: url("https://cdn.discordapp.com/emojis/919143455148613663.gif") center/100% no-repeat; padding: 1px 8px 0px 8px; margin-right: 6px;}
+[aria-label^="𝙎𝙬𝙚𝙚𝙩𝙮𝘿𝙧𝙚𝙖𝙢 ♡"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr::after {
+    content: "Partnered by DF Community";
+    font-size: 12px;
+    position: absolute;
+    background-color: var(--background-floating);
+    padding: 5px 10px;
+    border-radius: 4px;
+    opacity: 0;
+    display: none;
+    animation: tooltip .5s forwards;
+}
+[aria-label^="𝙎𝙬𝙚𝙚𝙩𝙮𝘿𝙧𝙚𝙖𝙢 ♡"] .container-1-ERn5 .header-3OsQeK .name-3Uvkvr:hover::after { opacity: 1; display: block;}
