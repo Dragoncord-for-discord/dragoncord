@@ -19,8 +19,8 @@ async def plugins_list():
 
 @app.route('/api/dragoncord/update', methods=['POST'])
 async def updater_update():
-	os.system('git pull')
-	os.system('cd .. & cd .. & cd .. & git pull')
+	os.system('git reset')
+	os.system('cd .. & cd .. & cd .. & git reset')
 	return "Updated", 200
 
 app.run(debug = True, port = 8723)
