@@ -8,6 +8,15 @@ html {
     color: white;
 }
 
+input {
+	background-color: #484848;
+	border: 0;
+	outline: 0;
+}
+input:focus {
+	outline:none!important;
+}
+
 .header {
     font-size: 27px;
 }
@@ -44,6 +53,7 @@ html {
     margin: 0;
 
     width: 30%;
+    min-width: 234px;
     min-height: 100vh;
     background-color: #484848;
     float: left;

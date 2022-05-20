@@ -5,13 +5,13 @@ var copiedHtml = "<p class='black'>Copied!</p>";
 var xhr = new XMLHttpRequest();
 
 async function makeRequest(method, url) {
-    console.log('[makeRequest] ' + method + ' | ' + url)
+    console.log('%c [makeRequest] ' + method + ' | ' + url, 'color: #ede442')
     xhr.open(method, url);
     xhr.responseType = null;
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send();
     if(xhr.readyState == 4 && xhr.status == 200) {
-        console.log('[makeRequest] ' + xhr.responseText);
+        console.log('%c [makeRequest] ' + xhr.responseText, 'color: #ede442');
         return false;
 	}
     else {
@@ -25,7 +25,7 @@ window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
 
 function updateDragoncord() {
     console.log("[Updater] Updating");
-    makeRequest("POST", "http://127.0.0.1:8723/api/dragoncord/update");
+    makeRequest("GET", "http://127.0.0.1:8723/api/dragoncord/update");
     console.log("[Updater] Finished");
 }
 
@@ -49,14 +49,14 @@ function plugins_list() {
 }
 
 function themes_list() {
-	makeRequest("GET", "http://127.0.0.1:8723/api/get/themes");
-    var themesLineCode = document.getElementById('settings-content').innerHTML = "<h1>Themes</h1>" + warningNotFinished + "<p id='themes-list'>Loading, please wait...</p>";
+	if (makeRequest("GET", "http://127.0.0.1:8723/api/get/themes") == false) {
+        var themesLineCode = document.getElementById('settings-content').innerHTML = "<h1>Themes</h1>" + warningNotFinished + "<p id='themes-list'>Loading, please wait...</p>";
+    }
+    else {
+        document.getElementById('settings-content').innerHTML = "<h1>Render settings failed :(</h1><div class='error-message'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='error-message-text'>Oof.. Something is broken! Render failed. There is information about the error below.</p> </img></div> <div class='settings-error'><h1>Message</h1>" + "Parse failed" + "<h1>URL</h1>" + "<p>http://127.0.0.1:8723/api/get/plugins</p> <p>main.js</p>" + "<h1>Error line number</h1>" + "7" + "<h1>Error column number</h1>" + "0" + "<h1>Error</h1>" + "Request failed" + "</div>";
+    }
 }
 
 function updater() {
     document.getElementById('settings-content').innerHTML = "<h1>Updater</h1>" + warningNotFinished + "<br>" + restartRequired + "<br>" + "<button onclick='updateDragoncord();'>Update Dragoncord (This requires runned local python server)</button>";
-}
-
-function render_error_demo() {
-	document.getElementById('settings-content').innerHTML = "<h1>Render settings failed :(</h1><div class='error-message'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='error-message-text'>Oof.. Something is broken! Render failed. There is information about the error below.</p> </img></div> <div class='settings-error'><h1>Message</h1>" + "Example error" + "<h1>URL</h1>" + "Failed" + "<h1>Error line number</h1>" + "31" + "<h1>Error column number</h1>" + "0" + "<h1>Error</h1>" + "Example error" + "</div>";
 }
