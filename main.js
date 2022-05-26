@@ -9,7 +9,9 @@ const {
 	Menu,
 	Tray,
   session,
-  ipcMain
+  ipcMain,
+  ipcRenderer,
+  desktopCapturer
 } = require('electron');
 const Sentry = require("@sentry/electron");
 const path = require('path');
@@ -18,6 +20,7 @@ const open = require('open');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const { spawn } = require("child_process");
 const { win32 } = require('path');
+const { exit } = require('process');
 
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
@@ -46,6 +49,7 @@ let main;
 function start_failed(error_message) {
   console.error('[START FAILED] Dragoncord Start Failed!');
   console.error('[START FAILED] ' + error_message);
+  process.exit();
 }
 
 Sentry.init({ dsn: "https://40ded2891df94cbab50bc7d3b14a8270@o1216346.ingest.sentry.io/6365775" });
@@ -68,7 +72,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       // Secure options
       allowRunningInsecureContent: config.ALLOW_RUNNING_INSECURE_CONTENT,
-      //contextIsolation: false,
+      contextIsolation: false,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       nodeIntegrationInSubFrames: true,
@@ -312,6 +316,11 @@ function createWindow() {
   	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return callback({cancel: true}); }
   },
   );
+
+  // Plugins/themes fix
+  main.webContents.on('did-finish-load', () => {
+    load_plugins();
+  });
 }
 
 // ipc Events
@@ -338,6 +347,8 @@ app.on('blur', () => {
   main.blurWebView();
 });
 
+//ipcRenderer.on("*", console.log('[ipcRenderer] detected'));
+
 // Load App
 app.whenReady().then(() => {
   console.log("[Electron JS] App is ready! Starting...");
@@ -356,4 +367,11 @@ app.whenReady().then(() => {
   tray.setToolTip(config.WEBAPP_TITLE);
   tray.setTitle(config.WEBAPP_TITLE);
   tray.setContextMenu(contextMenu);
+
+  // Desktop Capture
+  desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+    for (const source of sources) {
+      main.webContents.send('SET_SOURCE', source.id);
+    }
+  });
 });

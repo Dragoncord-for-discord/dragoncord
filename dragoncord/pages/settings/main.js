@@ -1,5 +1,8 @@
-var restartRequired = "<div class='restart-required'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='require-restart-text'>Some changes require restart</p><p class='require-restart-text'>Restart dragoncord now for apply changes</p> </img></div>";
-var warningNotFinished = "<div class='not-finished'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='not-finished-text'>Warning: It's still not yet finished</p><p class='not-finished-text'>and can start working unproperty</p> </img></div>";
+window.oncontextmenu = function() { return false; }
+
+var restartRequired = "<div class='error-message'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='error-text'>Some changes require restart</p><p class='error-text'>Restart dragoncord now for apply changes</p> </img></div>";
+var warningNotFinished = "<div class='warning'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='warning-text'>Warning: It's still not yet finished</p><p class='not-finished-text'>and can start working unproperty</p> </img></div>";
+var demoWarning = "<div class='warning'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='warning-text'>This just a demo</p><p class='warning-text'>The demo version will be different from the release version</p> </img></div>";
 var copiedHtml = "<p class='black'>Copied!</p>";
 
 var xhr = new XMLHttpRequest();
@@ -11,16 +14,17 @@ async function makeRequest(method, url) {
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.send();
     if(xhr.readyState == 4 && xhr.status == 200) {
-        console.log('%c [makeRequest] ' + xhr.responseText, 'color: #ede442');
+        console.log('%c [makeRequest] ' + xhr.responseText, 'color: #59ed42');
         return false;
 	}
     else {
+        //console.log('%c [makeRequest] ' + xhr.responseText, 'color: #ed4842');
     	return true;
     }
 }
 
 window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
-	document.getElementById('settings-content').innerHTML = "<h1>Render settings failed :(</h1><div class='error-message'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='error-message-text'>Oof.. Something is broken! Render failed. There is information about the error below.</p> </img></div> <div class='settings-error'><h1>Message</h1>" + msg + "<h1>URL</h1>" + url + "<h1>Error line number</h1>" + lineNo + "<h1>Error column number</h1>" + columnNo + "<h1>Error</h1>" + error + "</div>";
+	document.getElementById('settings-content').innerHTML = "<h1>Render settings failed :(</h1><div class='error-message'><img src='./6e97f6643e7df29b26571d96430e92f4.svg' width='100' height='100'> <p class='error-text'>Oof.. Something is broken! Render failed. There is information about the error below.</p> </img></div> <div class='settings-error'><h1>Message</h1>" + msg + "<h1>URL</h1>" + url + "<h1>Error line number</h1>" + lineNo + "<h1>Error column number</h1>" + columnNo + "<h1>Error</h1>" + error + "</div>";
 }
 
 function updateDragoncord() {
@@ -48,6 +52,16 @@ function plugins_list() {
     }
 }
 
+var dragoncord_config = "<div class='pluginCard'><h1>dragoncord-config</h1><p>License: MIT</p> <p>Author: DragonFire</p> <p>Description: Customize Dragoncord to fit your needs!</p> </div>"
+var discordexperiments = "<div class='pluginCard'><h1>discordexperiments</h1><p>License: MIT</p> <p>Author: DragonFire</p> <p>Description: Enables Discord Experiments and Developer tab</p></div>"
+
+var pluginsDemoList = "<p id='plugins-list'>" + dragoncord_config + "</p>"
+var pluginsDemo = "<h1>Plugins (Demo)</h1>" + demoWarning + pluginsDemoList + discordexperiments;
+
+function plugins_list_demo() {
+    document.getElementById('settings-content').innerHTML = pluginsDemo;
+}
+
 function themes_list() {
 	if (makeRequest("GET", "http://127.0.0.1:8723/api/get/themes") == false) {
         var themesLineCode = document.getElementById('settings-content').innerHTML = "<h1>Themes</h1>" + warningNotFinished + "<p id='themes-list'>Loading, please wait...</p>";
@@ -59,4 +73,31 @@ function themes_list() {
 
 function updater() {
     document.getElementById('settings-content').innerHTML = "<h1>Updater</h1>" + warningNotFinished + "<br>" + restartRequired + "<br>" + "<button onclick='updateDragoncord();'>Update Dragoncord (This requires runned local python server)</button>";
+}
+
+var clicked = 0;
+
+function dont_click_me() {
+    clicked++;
+    if (clicked == 1) {
+        document.getElementById('settings-content').innerHTML = "<h1>DON'T CLICK ME</h1> <p>Are you sure?</p>";
+    }
+    if (clicked == 2) {
+        document.getElementById('settings-content').innerHTML = "<h1>DON'T CL1CK ME</h1> <p>Really?</p>";
+    }
+    if (clicked == 3) {
+        document.getElementById('settings-content').innerHTML = "<h1>D0N'T CL1CK mE</h1> <p>St0p ThIs!</p>";
+    }
+    if (clicked == 4) {
+        document.getElementById('settings-content').innerHTML = "<h1>D0n'T CL1CK mE</h1> <p>St000oo0O00Op TnIz pls</p>";
+    }
+    if (clicked == 5) {
+        document.getElementById('settings-content').innerHTML = "<h1>D0n'T cL1CK mE</h1> <p>N0</p>";
+    }
+    if (clicked == 6) {
+        document.getElementById('settings-content').innerHTML = "<h1>D0n'T cL1CK mE</h1> <p>DON'T CLICK AGAIN</p>";
+    }
+    if (clicked == 7) {
+        document.getElementById('body').innerHTML = "<div class='settings-options'><h3 class='header'>Settings was crashed</h3></div> <div id='settings-content'><p style='padding-left: 6px;'>Content failed to show</p></div>";
+    }
 }

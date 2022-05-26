@@ -2,10 +2,27 @@ html {
     background-color: #202225;
 }
 
+@font-face {
+	font-family: "artic-bold";
+	src: url(Arkit-Bold.ttf) format("truetype");
+}
+
 * {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
     color: white;
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+body {
+	padding: 0;
+	margin: 0;
 }
 
 input {
@@ -17,8 +34,31 @@ input:focus {
 	outline:none!important;
 }
 
+button {
+	color: black;
+}
+
+/* Notification */
+.notification-content {
+	color: black;
+}
+
+.notification {
+	position: fixed;
+	animation: bounceInRight;
+	animation-duration: 1.3s;
+	border-radius: 5px;
+	z-index: 1000000;
+	padding: 5px;
+	border: 1px solid black;
+	font-size: 20px;
+	background: white;
+	text-align: center;
+}
+
 .header {
     font-size: 27px;
+    font-family: artic-bold;
 }
 
 .avatar {
@@ -29,6 +69,7 @@ input:focus {
 .setting {
 	padding-left: 5px;
 }
+
 
 .setting:hover {
 	-webkit-border-radius: 6px;
@@ -47,17 +88,22 @@ input:focus {
     background-color: #717171;
 }
 
+.pluginCard {
+	background-color: #484848;
+	border-radius: 5px;
+}
+
 /* Split divs */
 .settings-options {
-    padding: 0;
-    margin: 0;
-
     width: 30%;
     min-width: 234px;
     min-height: 100vh;
     background-color: #484848;
     float: left;
     padding-left: 16px;
+
+	border-top-right-radius: 6px;
+	border-bottom-right-radius: 6px;
 }
 #settings-content {
 	float: left;
@@ -85,7 +131,7 @@ input:focus {
 }
 
 /* Not finished */
-.not-finished {
+.warning {
 	padding-top: 8px;
 	padding-left: 8px;
 	padding-right: 8px;
@@ -99,47 +145,31 @@ input:focus {
    	align-items:center;
 }
 
-.not-finished-text {
+/* Warning */
+.warning-text {
 	/*color: black;*/
 	padding-left: 15px;
 	padding-right: 15px;
 }
 
-.not-finished-svg {
+.warning-svg {
 	color: black;
 }
 
-/* Restart required */
+/* Error */
 .error-message {
-	padding-top: 8px;
-	padding-left: 8px;
-	padding-right: 8px;
-
+	padding: 8px;
 	max-width: 600px;
-
 	border-radius: 5px;
 	background-color: #ED4245;
 	display: block;
    	display: flex;
-   	align-items:center;
+   	align-items: center;
 }
 
-.error-message-text {
+.error-text {
 	padding-left: 15px;
 	padding-right: 15px;
-}
-
-button {
-	color: black;
-}
-
-* {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 .black {

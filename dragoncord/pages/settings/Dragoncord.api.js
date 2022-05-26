@@ -23,12 +23,11 @@ class DragoncordAPI {
 		notification.style.top = 50 + 'px';
 		notification.style.right = 10 + 'px';
 
-		notification.innerHTML = html;
+		notification.innerHTML = "<div class='notification-content'>" + html + "</div>";
 		document.body.append(notification);
 
 		setTimeout(() => notification.remove(), removeAfter);
     }
 }
 
-DragoncordAPI.injectCSS(".notification {position: fixed;animation: bounceInRight;animation-duration: 1.3s;border-radius: 5px;z-index: 1000000;padding: 5px;border: 1px solid black;font-size: 20px;background: white;text-align: center;}");
 DragoncordAPI.showNotification("Dragoncord API loaded!");
