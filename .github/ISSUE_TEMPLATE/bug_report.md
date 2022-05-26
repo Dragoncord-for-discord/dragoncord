@@ -27,6 +27,7 @@ If applicable, add screenshots to help explain your problem.
  - Node Version: 
  - System Version: 
  - Dragoncord Version: 
+ - Debug Info (Dragoncord > Settings (not config!)> About > Button "Copy debug info to clipboard"): 
 
 **Additional context**
 Add any other context about the problem here.
