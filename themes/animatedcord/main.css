@@ -141,3 +141,8 @@
 	animation: bounceInRight;
 	animation-duration: 1s;
 }
+
+.notification-removed {
+	animation: bounceOutRight;
+	animation-duration: 1s;
+}

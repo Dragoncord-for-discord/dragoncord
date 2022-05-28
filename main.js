@@ -9,7 +9,9 @@ const {
 	Menu,
 	Tray,
   session,
-  ipcMain
+  ipcMain,
+  ipcRenderer,
+  desktopCapturer
 } = require('electron');
 const Sentry = require("@sentry/electron");
 const path = require('path');
@@ -18,6 +20,7 @@ const open = require('open');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const { spawn } = require("child_process");
 const { win32 } = require('path');
+const { exit } = require('process');
 
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
@@ -46,6 +49,7 @@ let main;
 function start_failed(error_message) {
   console.error('[START FAILED] Dragoncord Start Failed!');
   console.error('[START FAILED] ' + error_message);
+  process.exit();
 }
 
 Sentry.init({ dsn: "https://40ded2891df94cbab50bc7d3b14a8270@o1216346.ingest.sentry.io/6365775" });
@@ -68,7 +72,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       // Secure options
       allowRunningInsecureContent: config.ALLOW_RUNNING_INSECURE_CONTENT,
-      //contextIsolation: false,
+      contextIsolation: false,
       nodeIntegration: true,
       nodeIntegrationInWorker: true,
       nodeIntegrationInSubFrames: true,
@@ -90,45 +94,48 @@ function createWindow() {
   })
   require("@electron/remote/main").enable(main.webContents);
 
+  main.webContents.setAudioMuted(false);
+  main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
+
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
-      fs.readdir('./dragoncord/js', function (err, files) {
-        if (err) {
-          console.log('[Error] Unable to scan directory: ' + err);
-          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-          }
-        else {
-          if (!files.length) {
-            console.log('[Dragoncord JS] Folder is empty');
-            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-          }
-          else {
-            files.forEach(function (file) {
-              const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-              main.webContents.executeJavaScript(pluginsToLoad);
-              console.log('[Dragoncord JS] Loaded: ' + file);
-            });
-          }
-        }
+      	fs.readdir('./dragoncord/js', function (err, files) {
+	        if (err) {
+	          	console.log('[Error] Unable to scan directory: ' + err);
+	          	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+	        }
+	        else {
+	        	if (!files.length) {
+	            	console.log('[Dragoncord JS] Folder is empty');
+	            	start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+	          	}
+	          	else {
+	            	files.forEach(function (file) {
+	              	const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+	              	main.webContents.executeJavaScript(pluginsToLoad);
+	              	console.log('[Dragoncord JS] Loaded: ' + file);
+	            	});
+	          	}
+	        }
         });
 
         fs.readdir('./dragoncord/css', function (err, files) {
-          if (err) {
-            console.log('[Error] Unable to scan directory: ' + err);
-            start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-          }
-          else {
-            if (!files.length) {
-              console.log('[Dragoncord CSS] Folder is empty');
-                start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-            }
-            else {
-              files.forEach(function (file) {
-                const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
-                main.webContents.insertCSS(themeToLoad);
-                  console.log('[Dragoncord CSS] Loaded: ' + file);
-              });
+			if (err) {
+				console.log('[Error] Unable to scan directory: ' + err);
+            	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+          	}
+          	else {
+            	if (!files.length) {
+            		console.log('[Dragoncord CSS] Folder is empty');
+            	    start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+            	}
+            	else {
+              	files.forEach(function (file) {
+                	const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
+                	main.webContents.insertCSS(themeToLoad);
+                	console.log('[Dragoncord CSS] Loaded: ' + file);
+              	});
             }
         }});
 
@@ -138,12 +145,16 @@ function createWindow() {
             console.log('[Error] Unable to scan directory: ' + err);
           }
           else {
-            if (!files.length) { console.log('[Node Plugin] Folder is empty'); }
+            if (!files.length) {
+            	main.webContents.executeJavaScript("console.log('[Node Plugin] Folder is empty');");
+            	console.log('[Node Plugin] Folder is empty');
+            }
             else {
-              files.forEach(function (file) {
-                require('./dcord_node_plugins/' + file + '/' + 'main.js');
-                console.log('[Node Plugin] Loaded: ' + file);
-              });
+            	files.forEach(function (file) {
+            		require('./dcord_node_plugins/' + file + '/' + 'main.js');
+                	main.webContents.executeJavaScript("console.log('[Node Plugin] Loaded: " + file + "');");
+                	console.log('[Node Plugin] Loaded: ' + file);
+            	});
             }
           }
         });
@@ -154,12 +165,15 @@ function createWindow() {
             console.log('[Error] Unable to scan directory: ' + err);
           }
             else {
-              if (!files.length) { console.log('[Plugin] Folder is empty'); }
+              if (!files.length) {
+              	main.webContents.executeJavaScript("console.log('[Plugin] Folder is empty');");
+              	console.log('[Plugin] Folder is empty');
+              }
               else {
                 files.forEach(function (file) {
                   const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
                   main.webContents.executeJavaScript(pluginsToLoad);
-                  main.webContents.executeJavaScript("document.getElementById('plugins-list').innerHTML = document.getElementById('plugins-list').innerHTML + " + "<p>" + file + "</p>" + ";")
+                  main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
                   console.log('[Plugin] Loaded: ' + file);
                 });
               }
@@ -172,11 +186,15 @@ function createWindow() {
             console.log('[Error] Unable to scan directory: ' + err);
           }
             else {
-              if (!files.length) { console.log('[Theme] Folder is empty'); }
+              if (!files.length) {
+              	main.webContents.executeJavaScript("console.log('[Theme] Folder is empty');");
+              	console.log('[Theme] Folder is empty');
+              }
               else {
                 files.forEach(function (file) {
                   const themeToLoad = fs.readFileSync('./themes/' + file + '/' + 'main.css').toString();
                   main.webContents.insertCSS(themeToLoad);
+                  main.webContents.executeJavaScript("console.log('[Theme] Loaded: " + file + "');");
                   console.log('[Theme] Loaded: ' + file);
                 });
               }
@@ -220,6 +238,13 @@ function createWindow() {
       }
     },
     {
+      label: 'Reload', 
+      click() {
+        main.webContents.reload();
+        load_plugins();
+      }
+    },
+    {
       label: 'Reload plugins/themes',
       accelerator: process.platform === 'darwin' ? 'Alt+Cmd+Z' : 'Alt+Shift+Z',
       click() {
@@ -258,16 +283,39 @@ function createWindow() {
       }
     },
     {
-      label: 'Discord Status', 
+      label: 'Discord Support', 
       click() {
         main.webContents.loadURL('https://dis.gd/status');
       }
     },
     {
+      label: 'Discord Status', 
+      click() {
+        main.webContents.loadURL('https://support.discord.com');
+      }
+    },
+    {
       label: "Custom: " + config.DCORD_ENDPOINT, 
       click() {
-        main.webContents.loadURL(config.DCORD_ENDPOINT);
+        main.webContents.loadURL(config.DCORD_ENDPOINT + '/app');
         load_plugins();
+      }
+    }
+    ]
+  },
+  {
+    label: 'Tools',
+    submenu: [
+    {
+      label: 'Clear Cache',
+      click() { 
+        session.clearCache();
+      }
+    },
+    {
+      label: 'Clear Auth Cache',
+      click() { 
+        session.clearAuthCache();
       }
     }
     ]
@@ -295,6 +343,7 @@ function createWindow() {
   // WebRTC and Voice
   main.webContents.setWebRTCIPHandlingPolicy("default_public_and_private_interfaces")
   session.fromPartition("default").setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
+  session.fromPartition(session.defaultSession).setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
 
   // Anti-Telemetry
   main.webContents.session.webRequest.onBeforeRequest(
@@ -312,6 +361,11 @@ function createWindow() {
   	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return callback({cancel: true}); }
   },
   );
+
+  // Plugins/themes fix
+  main.webContents.on('did-finish-load', () => {
+    load_plugins();
+  });
 }
 
 // ipc Events
@@ -338,10 +392,11 @@ app.on('blur', () => {
   main.blurWebView();
 });
 
+//ipcRenderer.on("*", console.log('[ipcRenderer] detected'));
+
 // Load App
 app.whenReady().then(() => {
   console.log("[Electron JS] App is ready! Starting...");
-  createWindow();
 
   // Tray
   tray = new Tray(config.TRAY_ICON);
@@ -356,4 +411,6 @@ app.whenReady().then(() => {
   tray.setToolTip(config.WEBAPP_TITLE);
   tray.setTitle(config.WEBAPP_TITLE);
   tray.setContextMenu(contextMenu);
+
+  createWindow();
 });
