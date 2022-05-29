@@ -17,10 +17,13 @@ const Sentry = require("@sentry/electron");
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
-const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const { spawn } = require("child_process");
 const { win32 } = require('path');
 const { exit } = require('process');
+
+if (process.platform == "win32") {
+	const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
+}
 
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
@@ -39,10 +42,12 @@ switch (myArgs[0]) {
     var pluginsAndThemesLoadEnabled = true;
 }
 
-setupTitlebar();
+if (process.platform == "win32") {
+	setupTitlebar();
+}
 
 if (process.platform == "win32") { console.log("\x1b[42m", "OK", "\x1b[0m" + " Running on win32"); }
-else { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', ' Dragoncord is running.. Not on win32 (Windows). Patch some lines in main.js for make app usable.'); }
+else { console.warn('\x1b[43m \x1b[30m', 'WARN', '\x1b[0m', ' Dragoncord is running.. Not on win32 (Windows). Dragoncord was not be tested on you platform (' + process.platform + ')'); }
 
 let main;
 
@@ -91,8 +96,10 @@ function createWindow() {
       enableWebSQL: config.ENABLE_WEBSQL,
       webviewTag: config.WEBVIEW_TAG
     }
-  })
-  require("@electron/remote/main").enable(main.webContents);
+  });
+  if (process.platform == "win32") {
+  	require("@electron/remote/main").enable(main.webContents);
+  }
 
   main.webContents.setAudioMuted(false);
   main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
@@ -214,7 +221,10 @@ function createWindow() {
   main.setOpacity(config.WINDOW_OPACITY);
   main.setAlwaysOnTop(config.ALWAYS_ON_TOP);
 
-  attachTitlebarToWindow(main);
+  if (process.platform == "win32") {
+  	attachTitlebarToWindow(main);
+  }
+
   var menu = Menu.buildFromTemplate([
   {
     label: 'Dragoncord',
