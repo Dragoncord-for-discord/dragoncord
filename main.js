@@ -20,10 +20,7 @@ const open = require('open');
 const { spawn } = require("child_process");
 const { win32 } = require('path');
 const { exit } = require('process');
-
-if (process.platform == "win32") {
-	const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
-}
+const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
