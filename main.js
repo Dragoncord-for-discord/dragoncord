@@ -290,13 +290,13 @@ function createWindow() {
       }
     },
     {
-      label: 'Discord Support', 
+      label: 'Discord Status', 
       click() {
         main.webContents.loadURL('https://dis.gd/status');
       }
     },
     {
-      label: 'Discord Status', 
+      label: 'Discord Support', 
       click() {
         main.webContents.loadURL('https://support.discord.com');
       }
