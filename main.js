@@ -1,5 +1,8 @@
 console.log('[Dragoncord] Please wait, we are loading :)');
 
+const Sentry = require("@sentry/electron");
+Sentry.init({ dsn: "https://40ded2891df94cbab50bc7d3b14a8270@o1216346.ingest.sentry.io/6365775" });
+
 var config = require('./config.json');
 
 // Libs
@@ -8,12 +11,12 @@ const {
 	BrowserWindow,
 	Menu,
 	Tray,
-  session,
-  ipcMain,
-  ipcRenderer,
-  desktopCapturer
+	session,
+	ipcMain,
+	ipcRenderer,
+	desktopCapturer,
+	Notification
 } = require('electron');
-const Sentry = require("@sentry/electron");
 const path = require('path');
 const fs = require("fs");
 const open = require('open');
@@ -51,10 +54,20 @@ let main;
 function start_failed(error_message) {
   console.error('[START FAILED] Dragoncord Start Failed!');
   console.error('[START FAILED] ' + error_message);
+  //throw new Error('Start failed. ' + error_message)
   process.exit();
 }
 
-Sentry.init({ dsn: "https://40ded2891df94cbab50bc7d3b14a8270@o1216346.ingest.sentry.io/6365775" });
+fs.readdir('./dragoncord', function (err, files) {
+	if (err) {
+		start_failed("/dragoncord is missing! Please redownload Dragoncord!");
+	}
+	else {
+		if (!files.length) {
+			start_failed("/dragoncord folder is empty! Please redownload Dragoncord!");
+		}
+	}
+});
 
 console.log('Dragoncord By DragonFire | Web Client');
 console.log('Endpoint: ' + config.DCORD_ENDPOINT);
@@ -95,7 +108,7 @@ function createWindow() {
     }
   });
   if (process.platform == "win32") {
-  	require("@electron/remote/main").enable(main.webContents);
+	require("@electron/remote/main").enable(main.webContents);
   }
 
   main.webContents.setAudioMuted(false);
@@ -324,6 +337,12 @@ function createWindow() {
       click() { 
         main.webContents.session.clearAuthCache();
       }
+    },
+    {
+      label: 'Clear Storage Data',
+      click() {
+        main.webContents.session.clearStorageData()
+      }
     }
     ]
   },
@@ -342,15 +361,10 @@ function createWindow() {
   ])
   Menu.setApplicationMenu(menu);
 
-  console.log('[Discord] Loading Discord');
-  main.loadURL(config.DCORD_ENDPOINT + "/app");
-  //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
-  //main.webContents.loadFile('./dragoncord/pages/splashscreen/index.html');
-
   // WebRTC and Voice
   main.webContents.setWebRTCIPHandlingPolicy("default_public_and_private_interfaces")
   session.fromPartition("default").setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
-  session.fromPartition(session.defaultSession).setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
+  //session.fromPartition(session.defaultSession).setPermissionRequestHandler((webContents, permission, callback) => {callback(true);});
 
   // Anti-Telemetry
   main.webContents.session.webRequest.onBeforeRequest(
@@ -373,6 +387,11 @@ function createWindow() {
   main.webContents.on('did-finish-load', () => {
     load_plugins();
   });
+
+  console.log('[Discord] Loading Discord');
+  main.loadURL(config.DCORD_ENDPOINT + "/app");
+  //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
+  //main.webContents.loadFile('./dragoncord/pages/splashscreen/index.html');
 }
 
 // ipc Events
