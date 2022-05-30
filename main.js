@@ -316,13 +316,13 @@ function createWindow() {
     {
       label: 'Clear Cache',
       click() { 
-        session.clearCache();
+        main.webContents.session.clearCache();
       }
     },
     {
       label: 'Clear Auth Cache',
       click() { 
-        session.clearAuthCache();
+        main.webContents.session.clearAuthCache();
       }
     }
     ]
