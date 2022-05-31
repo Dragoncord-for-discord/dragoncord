@@ -25,6 +25,9 @@ const { win32 } = require('path');
 const { exit } = require('process');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
+
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
 //process.env.ELECTRON_ENABLE_LOGGING = 1;
@@ -129,9 +132,9 @@ function createWindow() {
 	          	}
 	          	else {
 	            	files.forEach(function (file) {
-	              	const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-	              	main.webContents.executeJavaScript(pluginsToLoad);
-	              	console.log('[Dragoncord JS] Loaded: ' + file);
+	              		const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+	              		main.webContents.executeJavaScript(pluginsToLoad);
+	              		console.log('[Dragoncord JS] Loaded: ' + file);
 	            	});
 	          	}
 	        }
@@ -170,6 +173,7 @@ function createWindow() {
             	files.forEach(function (file) {
             		require('./dcord_node_plugins/' + file + '/' + 'main.js');
                 	main.webContents.executeJavaScript("console.log('[Node Plugin] Loaded: " + file + "');");
+                	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Node Plugin] ' + file + ' loaded!");')
                 	console.log('[Node Plugin] Loaded: ' + file);
             	});
             }
@@ -188,10 +192,11 @@ function createWindow() {
               }
               else {
                 files.forEach(function (file) {
-                  const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
-                  main.webContents.executeJavaScript(pluginsToLoad);
-                  main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
-                  console.log('[Plugin] Loaded: ' + file);
+                	const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
+                	main.webContents.executeJavaScript(pluginsToLoad);
+                	main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
+                	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Plugin] ' + file + ' loaded!");')
+                	console.log('[Plugin] Loaded: ' + file);
                 });
               }
             }
@@ -212,6 +217,7 @@ function createWindow() {
                   const themeToLoad = fs.readFileSync('./themes/' + file + '/' + 'main.css').toString();
                   main.webContents.insertCSS(themeToLoad);
                   main.webContents.executeJavaScript("console.log('[Theme] Loaded: " + file + "');");
+                  //main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Theme] ' + file + ' loaded!");')
                   console.log('[Theme] Loaded: ' + file);
                 });
               }
@@ -395,6 +401,7 @@ function createWindow() {
 }
 
 // ipc Events
+ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (event, opts) => desktopCapturer.getSources(opts));
 ipcMain.on("restart-app", (event, message) => {
     app.quit();
     app.relaunch();
