@@ -7,9 +7,19 @@ html {
 	src: url(Arkit-Bold.ttf) format("truetype");
 }
 
+@font-face {
+    font-family: 'Discordinated';
+    src: url('https://kckarnige.is-a.dev/femboi_owo/DISCORDINATED.woff2') format('woff2'),
+        url('https://kckarnige.is-a.dev/femboi_owo/DISCORDINATED.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 * {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 20px;
+
     color: white;
 
 	-webkit-touch-callout: none;
@@ -58,7 +68,7 @@ button {
 
 .header {
     font-size: 27px;
-    font-family: artic-bold;
+    font-family: Discordinated;
 }
 
 .avatar {

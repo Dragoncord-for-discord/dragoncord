@@ -35,7 +35,7 @@ function updateDragoncord() {
 
 function about() {
 	buildInfo = "Build 13.05.2022 | Branch: Dev | User-Agent: " + navigator.userAgent;
-    document.getElementById('settings-content').innerHTML = "<h1>About</h1>" + warningNotFinished +"<p>" + "</p><p id='user-agent'>Your user-agent in debug info</p><p>Repository: <a href='https://github.com/Dragoncord-for-discord/dragoncord'>https://github.com/Dragoncord-for-discord/dragoncord</a></p><h1>Author of idea and Developer</h1><img src='https://cdn.discordapp.com/avatars/957240995169337395/0eaa4683303f429e72f8b4ae19a63b37.webp?size=512' height='32' width='32' class='avatar'>ДраконОгонь 🐲#8392</img><br><br><button onclick='navigator.clipboard.writeText(buildInfo);DragoncordAPI.showNotification(copiedHtml);'>Copy debug info to clipboard</button>";
+    document.getElementById('settings-content').innerHTML = "<h1>About</h1>" + warningNotFinished +"<p>" + "</p><p id='user-agent'>Your user-agent in debug info</p><p>Repository: <a href='https://github.com/Dragoncord-for-discord/dragoncord'>https://github.com/Dragoncord-for-discord/dragoncord</a></p><h1>Author of idea and Developer</h1><img src='https://cdn.discordapp.com/avatars/957240995169337395/0eaa4683303f429e72f8b4ae19a63b37.webp?size=512' height='32' width='32' class='avatar'>ДраконОгонь 🐲#8392</img><br><br><button onclick='navigator.clipboard.writeText(buildInfo);DragoncordAPIfixed.showNotification(copiedHtml);'>Copy debug info to clipboard</button>";
 }
 
 function settings() {

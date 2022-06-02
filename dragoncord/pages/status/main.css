@@ -1,0 +1,20 @@
+html {
+    background-color: #202225;
+}
+
+* {
+    font-family: Arial;
+    font-size: 18px;
+}
+
+* {
+    color: white;
+}
+
+img {
+    border-radius: 20px;
+}
+
+hr {
+    color: rgba(255, 255, 255, 0);
+}
