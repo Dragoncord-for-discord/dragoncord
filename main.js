@@ -24,10 +24,13 @@ const { spawn } = require("child_process");
 const { win32 } = require('path');
 const { exit } = require('process');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
+const wrtc = require('electron-webrtc')({ headless: true });
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
+app.commandLine.appendSwitch('WebRTCPipeWireCapturer');
 
+process.env.WebRTCPipeWireCapturer = 1;
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
 //process.env.ELECTRON_ENABLE_LOGGING = 1;
@@ -74,7 +77,6 @@ fs.readdir('./dragoncord', function (err, files) {
 
 console.log('Dragoncord By DragonFire | Web Client');
 console.log('Endpoint: ' + config.DCORD_ENDPOINT);
-
 // Window
 function createWindow() {
   const main = new BrowserWindow({
@@ -115,7 +117,7 @@ function createWindow() {
   }
 
   main.webContents.setAudioMuted(false);
-  main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
+  //main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
 
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
@@ -394,6 +396,9 @@ function createWindow() {
     load_plugins();
   });
 
+  main.webContents.on("did-fail-load", function() {
+    main.webContents.loadFile('./dragoncord/pages/status/offline.html');
+  });
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
   //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
