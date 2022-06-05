@@ -15,7 +15,8 @@ const {
 	ipcMain,
 	ipcRenderer,
 	desktopCapturer,
-	Notification
+	Notification,
+	nativeImage
 } = require('electron');
 const path = require('path');
 const fs = require("fs");
@@ -28,7 +29,6 @@ const wrtc = require('electron-webrtc')({ headless: true });
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
-app.commandLine.appendSwitch('WebRTCPipeWireCapturer');
 
 process.env.WebRTCPipeWireCapturer = 1;
 process.env.PULSE_LATENCY_MSEC = 30;
@@ -290,7 +290,7 @@ function createWindow() {
     label: 'Discord Web Sites',
     submenu: [
     {
-      label: 'Discord', 
+      label: 'Discord',
       click() {
         main.webContents.loadURL('https://discord.com/app');
         load_plugins();
@@ -396,9 +396,10 @@ function createWindow() {
     load_plugins();
   });
 
-  main.webContents.on("did-fail-load", function() {
-    main.webContents.loadFile('./dragoncord/pages/status/offline.html');
-  });
+  //main.webContents.on("did-fail-load", function() {
+  //  main.webContents.loadFile('./dragoncord/pages/status/offline.html');
+  //});
+
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
   //main.loadURL('https://www.whatsmybrowser.org/'); // Used for testing
@@ -406,7 +407,11 @@ function createWindow() {
 }
 
 // ipc Events
-ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (event, opts) => desktopCapturer.getSources(opts));
+ipcMain.handle(
+  'DESKTOP_CAPTURER_GET_SOURCES',
+  (event, opts) => desktopCapturer.getSources(opts)
+);
+
 ipcMain.on("restart-app", (event, message) => {
     app.quit();
     app.relaunch();
