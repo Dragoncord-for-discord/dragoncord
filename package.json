@@ -21,6 +21,7 @@
     "@electron/remote": "^2.0.8",
     "@sentry/electron": "^3.0.7",
     "custom-electron-titlebar": "^4.1.0",
+    "electron-webrtc": "^0.3.0",
     "open": "^8.4.0"
   }
 }
