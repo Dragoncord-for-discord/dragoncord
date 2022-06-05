@@ -1,1 +1,1 @@
-npm run start --unhandled-rejections=strict --trace-warnings --enable-features=WebRTCPipeWireCapturer %1
+npm run start --unhandled-rejections=strict --trace-warnings %1
