@@ -2,21 +2,16 @@
 // Powercord, BetterDiscord to Dragoncord.
 // Made on JS (Ported some features from NodeJS).
 
-function require(module) {
-	console.log('[PortNodeJS] Module to load: ' + module);
+var exports = {};
+console.log("[PortNodeJS] module.exports injected")
+
+function require(moduleName) {
+	console.log('[PortNodeJS] Module to load: ' + moduleName);
 
 	// Powercord
-	if (module == "powercord/injector") {
-		function inject() {
-			console.log("[powercord/injector] [inject]" + arguments)
-		}
-		function uninject() {
-			console.log("[powercord/injector] [uninject]" + arguments)
-		}
-	}
-	if (module == "powercord/webpack") {
-		function getModule() {
-			console.log("[powercord/webpack] [getModule]" + arguments)
-		}
+	if (moduleName.startsWith("powercord") == true) {
+		console.log("[PortNodeJS] Powercord API currently not supported");
+		console.log("[PortNodeJS] Error occured while loading " + moduleName);
+		console.log("[PortNodeJS] This module made for Powercord. Powercord API currently not supported");
 	}
 }

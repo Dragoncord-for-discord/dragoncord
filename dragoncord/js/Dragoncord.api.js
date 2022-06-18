@@ -63,7 +63,7 @@ class DragoncordAPI {
 
 window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
 	if (msg == "ResizeObserver loop limit exceeded") {
-		console.log("[onerror] Uncritical error skipped")
+		console.log("[onerror] Uncritical error skipped");
 	}
 	else {
 		console.error("Error occured!\nMessage: " + msg + "\nURL: " + url + "\nError line number: " + lineNo + "\nError column number" + columnNo + "\nError" + error);
@@ -73,4 +73,3 @@ window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
 
 DragoncordAPI.injectCSS(".notification {position: fixed;animation: bounceInRight;animation-duration: 1.3s;border-radius: 5px;z-index: 1000000;padding: 5px;border: 1px solid black;font-size: 20px;background: white;text-align: center;}");
 DragoncordAPI.injectCSS(".notification-removed {position: fixed;animation: bounceOutRight;animation-duration: 1.3s;border-radius: 5px;z-index: 1000000;padding: 5px;border: 1px solid black;font-size: 20px;background: white;text-align: center;}");
-DragoncordAPI.showNotification("Dragoncord API loaded!");
