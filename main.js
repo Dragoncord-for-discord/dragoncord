@@ -15,7 +15,8 @@ const {
 	ipcMain,
 	ipcRenderer,
 	desktopCapturer,
-	Notification
+	Notification,
+	nativeImage
 } = require('electron');
 const path = require('path');
 const fs = require("fs");
@@ -29,6 +30,7 @@ const wrtc = require('electron-webrtc')({ headless: true });
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
 
+process.env.WebRTCPipeWireCapturer = 1;
 process.env.PULSE_LATENCY_MSEC = 30;
 //process.env.PIPEWIRE_LATENCY = 30;
 //process.env.ELECTRON_ENABLE_LOGGING = 1;
@@ -75,7 +77,6 @@ fs.readdir('./dragoncord', function (err, files) {
 
 console.log('Dragoncord By DragonFire | Web Client');
 console.log('Endpoint: ' + config.DCORD_ENDPOINT);
-
 // Window
 function createWindow() {
   const main = new BrowserWindow({
@@ -116,49 +117,52 @@ function createWindow() {
   }
 
   main.webContents.setAudioMuted(false);
-  main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
+  //main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
 
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
-      	fs.readdir('./dragoncord/js', function (err, files) {
-	        if (err) {
-	          	console.log('[Error] Unable to scan directory: ' + err);
-	          	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-	        }
-	        else {
-	        	if (!files.length) {
-	            	console.log('[Dragoncord JS] Folder is empty');
-	            	start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-	          	}
-	          	else {
-	            	files.forEach(function (file) {
-	              		const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-	              		main.webContents.executeJavaScript(pluginsToLoad);
-	              		console.log('[Dragoncord JS] Loaded: ' + file);
-	            	});
-	          	}
-	        }
-        });
+      fs.readdir('./dragoncord/js', function (err, files) {
+        if (err) {
+          console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+        }
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord JS] Folder is empty');
+            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+            files.forEach(function (file) {
+              const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+              main.webContents.executeJavaScript(pluginsToLoad);
+              main.webContents.executeJavaScript("console.log('[Dragoncord JS] Loaded: " + file + "');");
+              console.log('[Dragoncord JS] Loaded: ' + file);
+            });
+          }
+        }
+      });
 
-        fs.readdir('./dragoncord/css', function (err, files) {
-			if (err) {
-				console.log('[Error] Unable to scan directory: ' + err);
-            	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-          	}
-          	else {
-            	if (!files.length) {
-            		console.log('[Dragoncord CSS] Folder is empty');
-            	    start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-            	}
-            	else {
-              	files.forEach(function (file) {
-                	const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
-                	main.webContents.insertCSS(themeToLoad);
-                	console.log('[Dragoncord CSS] Loaded: ' + file);
-              	});
-            }
-        }});
+      fs.readdir('./dragoncord/css', function (err, files) {
+  			if (err) {
+  				console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+        }
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord CSS] Folder is empty');
+            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+            files.forEach(function (file) {
+              const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
+              main.webContents.insertCSS(themeToLoad);
+              main.webContents.executeJavaScript("console.log('[Dragoncord CSS] Loaded: " + file + "');");
+              console.log('[Dragoncord CSS] Loaded: ' + file);
+            });
+          }
+        }
+      });
 
         // Node Plugins
         fs.readdir('./dcord_node_plugins', function (err, files) {
@@ -186,21 +190,21 @@ function createWindow() {
           if (err) {
             console.log('[Error] Unable to scan directory: ' + err);
           }
-            else {
-              if (!files.length) {
-              	main.webContents.executeJavaScript("console.log('[Plugin] Folder is empty');");
-              	console.log('[Plugin] Folder is empty');
-              }
-              else {
-                files.forEach(function (file) {
-                	const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
-                	main.webContents.executeJavaScript(pluginsToLoad);
-                	main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
-                	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Plugin] ' + file + ' loaded!");')
-                	console.log('[Plugin] Loaded: ' + file);
-                });
-              }
+          else {
+            if (!files.length) {
+            	main.webContents.executeJavaScript("console.log('[Plugin] Folder is empty');");
+            	console.log('[Plugin] Folder is empty');
             }
+            else {
+              files.forEach(function (file) {
+              	const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
+              	main.webContents.executeJavaScript(pluginsToLoad);
+              	main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
+              	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Plugin] ' + file + ' loaded!");')
+              	console.log('[Plugin] Loaded: ' + file);
+              });
+            }
+          }
         });
 
         // Themes
@@ -289,7 +293,7 @@ function createWindow() {
     label: 'Discord Web Sites',
     submenu: [
     {
-      label: 'Discord', 
+      label: 'Discord',
       click() {
         main.webContents.loadURL('https://discord.com/app');
         load_plugins();
@@ -390,10 +394,21 @@ function createWindow() {
   },
   );
 
+	desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+	  for (const source of sources) {
+	    mainWindow.webContents.send('SET_SOURCE', source.id);
+	    return;
+	  }
+	});
+
   // Plugins/themes fix
   main.webContents.on('did-finish-load', () => {
     load_plugins();
   });
+
+  //main.webContents.on("did-fail-load", function() {
+  //  main.webContents.loadFile('./dragoncord/pages/status/offline.html');
+  //});
 
   console.log('[Discord] Loading Discord');
   main.loadURL(config.DCORD_ENDPOINT + "/app");
@@ -402,7 +417,11 @@ function createWindow() {
 }
 
 // ipc Events
-ipcMain.handle("DESKTOP_CAPTURER_GET_SOURCES", (event, opts) => desktopCapturer.getSources(opts));
+ipcMain.handle(
+  'DESKTOP_CAPTURER_GET_SOURCES',
+  (event, opts) => desktopCapturer.getSources(opts)
+);
+
 ipcMain.on("restart-app", (event, message) => {
     app.quit();
     app.relaunch();
