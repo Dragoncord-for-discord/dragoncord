@@ -32,7 +32,7 @@ class DragoncordAPI {
 		setTimeout(() => notification.remove(), removeAfter + 1300);
 
 		return notification;
-    }
+    	}
 
 	static makeRequest(method, url) {
 		console.log('%c [makeRequest] ' + method + ' | ' + url, 'color: #ede442')
