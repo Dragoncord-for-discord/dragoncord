@@ -1,6 +1,6 @@
 {
-	"APP_ICON": ".\\dragoncord\\discord\\images\\app.ico",
-	"TRAY_ICON": ".\\dragoncord\\discord\\images\\tray.png",
+	"APP_ICON": "./dragoncord/discord/images/app.ico",
+	"TRAY_ICON": "./dragoncord/discord/images/tray.png",
 	"DCORD_ENDPOINT": "https://ptb.discord.com",
 	"WEBAPP_TITLE": "Discord",
 	"DEFAULT_WIDTH": 1280,
