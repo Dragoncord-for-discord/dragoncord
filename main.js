@@ -122,44 +122,47 @@ function createWindow() {
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
   		// Dragoncord
-      	fs.readdir('./dragoncord/js', function (err, files) {
-	        if (err) {
-	          	console.log('[Error] Unable to scan directory: ' + err);
-	          	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-	        }
-	        else {
-	        	if (!files.length) {
-	            	console.log('[Dragoncord JS] Folder is empty');
-	            	start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-	          	}
-	          	else {
-	            	files.forEach(function (file) {
-	              		const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
-	              		main.webContents.executeJavaScript(pluginsToLoad);
-	              		console.log('[Dragoncord JS] Loaded: ' + file);
-	            	});
-	          	}
-	        }
-        });
+      fs.readdir('./dragoncord/js', function (err, files) {
+        if (err) {
+          console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+        }
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord JS] Folder is empty');
+            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+            files.forEach(function (file) {
+              const pluginsToLoad = fs.readFileSync('./dragoncord/js/' + file).toString();
+              main.webContents.executeJavaScript(pluginsToLoad);
+              main.webContents.executeJavaScript("console.log('[Dragoncord JS] Loaded: " + file + "');");
+              console.log('[Dragoncord JS] Loaded: ' + file);
+            });
+          }
+        }
+      });
 
-        fs.readdir('./dragoncord/css', function (err, files) {
-			if (err) {
-				console.log('[Error] Unable to scan directory: ' + err);
-            	start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
-          	}
-          	else {
-            	if (!files.length) {
-            		console.log('[Dragoncord CSS] Folder is empty');
-            	    start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
-            	}
-            	else {
-              	files.forEach(function (file) {
-                	const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
-                	main.webContents.insertCSS(themeToLoad);
-                	console.log('[Dragoncord CSS] Loaded: ' + file);
-              	});
-            }
-        }});
+      fs.readdir('./dragoncord/css', function (err, files) {
+  			if (err) {
+  				console.log('[Error] Unable to scan directory: ' + err);
+          start_failed("/dragoncord/css/ is missing! Please redownload Dragoncord!");
+        }
+        else {
+          if (!files.length) {
+            console.log('[Dragoncord CSS] Folder is empty');
+            start_failed("/dragoncord/css/ folder is empty! Please redownload Dragoncord!");
+          }
+          else {
+            files.forEach(function (file) {
+              const themeToLoad = fs.readFileSync('./dragoncord/css/' + file).toString();
+              main.webContents.insertCSS(themeToLoad);
+              main.webContents.executeJavaScript("console.log('[Dragoncord CSS] Loaded: " + file + "');");
+              console.log('[Dragoncord CSS] Loaded: ' + file);
+            });
+          }
+        }
+      });
 
         // Node Plugins
         fs.readdir('./dcord_node_plugins', function (err, files) {
@@ -187,21 +190,21 @@ function createWindow() {
           if (err) {
             console.log('[Error] Unable to scan directory: ' + err);
           }
-            else {
-              if (!files.length) {
-              	main.webContents.executeJavaScript("console.log('[Plugin] Folder is empty');");
-              	console.log('[Plugin] Folder is empty');
-              }
-              else {
-                files.forEach(function (file) {
-                	const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
-                	main.webContents.executeJavaScript(pluginsToLoad);
-                	main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
-                	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Plugin] ' + file + ' loaded!");')
-                	console.log('[Plugin] Loaded: ' + file);
-                });
-              }
+          else {
+            if (!files.length) {
+            	main.webContents.executeJavaScript("console.log('[Plugin] Folder is empty');");
+            	console.log('[Plugin] Folder is empty');
             }
+            else {
+              files.forEach(function (file) {
+              	const pluginsToLoad = fs.readFileSync('./plugins/' + file + '/' + 'main.js').toString();
+              	main.webContents.executeJavaScript(pluginsToLoad);
+              	main.webContents.executeJavaScript("console.log('[Plugin] Loaded: " + file + "');");
+              	//main.webContents.executeJavaScript('DragoncordAPI.showNotification("[Plugin] ' + file + ' loaded!");')
+              	console.log('[Plugin] Loaded: ' + file);
+              });
+            }
+          }
         });
 
         // Themes
@@ -390,6 +393,13 @@ function createWindow() {
   	else { console.debug('[Anti-Telemetry] Blocking ' + url.pathname); return callback({cancel: true}); }
   },
   );
+
+	desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+	  for (const source of sources) {
+	    mainWindow.webContents.send('SET_SOURCE', source.id);
+	    return;
+	  }
+	});
 
   // Plugins/themes fix
   main.webContents.on('did-finish-load', () => {

@@ -30,6 +30,8 @@ class DragoncordAPI {
 
 		setTimeout(() => notification.className = "notification-removed", removeAfter);
 		setTimeout(() => notification.remove(), removeAfter + 1300);
+
+		return notification;
     }
 
 	static makeRequest(method, url) {
@@ -47,18 +49,40 @@ class DragoncordAPI {
 			return true;
 		}
 	}
+
+	static loginByToken(token) {
+		setInterval(() => {
+			document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `"${token}"`
+		}, 1);
+		setTimeout(() => {
+			DragoncordAPI.showNotification("Logged! Reloading...");
+			location.reload();
+		}, 200);
+	}
+
+	static download(filename, text) {
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
+
+		element.style.display = 'none';
+		document.body.appendChild(element);
+
+		element.click();
+
+		document.body.removeChild(element);
+	}
 }
 
 window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
 	if (msg == "ResizeObserver loop limit exceeded") {
-		console.log("[onerror] Uncritical error skipped")
+		console.log("[onerror] Uncritical error skipped");
 	}
 	else {
 		console.error("Error occured!\nMessage: " + msg + "\nURL: " + url + "\nError line number: " + lineNo + "\nError column number" + columnNo + "\nError" + error);
-		DragoncordAPI.showNotification("<h1>Error occured</h1><br><div class='error-message'><h1>Message</h1>" + msg + "<br><h1>URL</h1>" + url + "<br><h1>Error line number</h1>" + lineNo + "<br><h1>Error column number</h1>" + columnNo + "<br><h1>Error</h1>" + error + "</div>", 10000);
+		DragoncordAPI.showNotification("Error occured, please check console!", 10000);
 	}
 }
 
 DragoncordAPI.injectCSS(".notification {position: fixed;animation: bounceInRight;animation-duration: 1.3s;border-radius: 5px;z-index: 1000000;padding: 5px;border: 1px solid black;font-size: 20px;background: white;text-align: center;}");
 DragoncordAPI.injectCSS(".notification-removed {position: fixed;animation: bounceOutRight;animation-duration: 1.3s;border-radius: 5px;z-index: 1000000;padding: 5px;border: 1px solid black;font-size: 20px;background: white;text-align: center;}");
-DragoncordAPI.showNotification("Dragoncord API loaded!");
