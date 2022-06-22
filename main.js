@@ -26,6 +26,7 @@ const { win32 } = require('path');
 const { exit } = require('process');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const wrtc = require('electron-webrtc')({ headless: true });
+delete require('electron').nativeImage.createThumbnailFromPath;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
