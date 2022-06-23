@@ -26,8 +26,10 @@ const { win32 } = require('path');
 const { exit } = require('process');
 const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const wrtc = require('electron-webrtc')({ headless: true });
+const source_map_support = require('source-map-support').install();
 delete require('electron').nativeImage.createThumbnailFromPath;
 
+// Settings
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.commandLine.appendSwitch('enable-webrtc-h264-with-openh264-ffmpeg');
 
@@ -118,7 +120,7 @@ function createWindow() {
   }
 
   main.webContents.setAudioMuted(false);
-  //main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.46 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
+  //main.webContents.setUserAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.47 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36")
 
   function load_plugins() {
   	if (pluginsAndThemesLoadEnabled == true) {
@@ -385,6 +387,11 @@ function createWindow() {
       //'https://*/api/*/channels/*/typing',
       'https://*/api/*/science',
       'https://*/api/*/track'
+
+      //'https://*/assets/92f72ff03a9f9354db89.js',
+      //'https://*/assets/c3b2982aa8e45f9d42df.js',
+      //'https://*/bad-domains/hashes.json',
+      //'https://*/api/v9/applications/detectable'
     ]
   },
   (details, callback) => {
@@ -397,7 +404,7 @@ function createWindow() {
 
 	desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
 	  for (const source of sources) {
-	    mainWindow.webContents.send('SET_SOURCE', source.id);
+	    main.webContents.send('SET_SOURCE', source.id);
 	    return;
 	  }
 	});
@@ -447,6 +454,23 @@ app.on('blur', () => {
 });
 
 //ipcRenderer.on("*", console.log('[ipcRenderer] detected'));
+
+// Discord Require
+/*
+require("./discordjsmodules/app_bootstrap/windowsUtils.js");
+require("./discordjsmodules/app_bootstrap/ipcMain.js");
+require("./discordjsmodules/app_bootstrap/request.js");
+require("./discordjsmodules/app_bootstrap/GPUSettings.js");
+*/
+
+app.on('web-contents-created', (event, webContents) => {
+  webContents.on('select-bluetooth-device', (event, devices, callback) => {
+    // Prevent default behavior
+    event.preventDefault();
+    // Cancel the request
+    callback('');
+  });
+});
 
 // Load App
 app.whenReady().then(() => {
