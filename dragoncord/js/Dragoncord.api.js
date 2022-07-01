@@ -34,19 +34,22 @@ class DragoncordAPI {
 		return notification;
     }
 
-	static makeRequest(method, url) {
+	static makeRequest(method, url, isDownload = false, token = null) {
 		console.log('%c [makeRequest] ' + method + ' | ' + url, 'color: #ede442')
 		xhr.open(method, url);
 		xhr.responseType = null;
 		xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+		xhr.setRequestHeader("Authorization", token);
 		xhr.send();
 		if(xhr.readyState == 4 && xhr.status == 200) {
 			console.log('%c [makeRequest] ' + xhr.responseText, 'color: #59ed42');
-			return false;
+			if (isDownload == true) {return xhr.responseText;}
+			else {return false;}
 		}
 		else {
 			console.log('%c [makeRequest] ' + xhr.responseText, 'color: #ed4842');
-			return true;
+			if (isDownload == true) {return xhr.responseText;}
+			else {return true;}
 		}
 	}
 
@@ -72,6 +75,20 @@ class DragoncordAPI {
 
 		document.body.removeChild(element);
 	}
+
+	static getToken() {
+		var token = (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
+		return token;
+	}
+
+	static changeStatus(token, status) {
+		xhr.open("PATCH", "https://" + window.location.host + "/api/v9/users/@me/settings");
+		xhr.responseType = null;
+		xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.setRequestHeader("Authorization", token);
+		xhr.send(JSON.stringify({"status": status}));
+	}
 }
 
 window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
@@ -79,7 +96,6 @@ window.onerror = function renderError(msg, url, lineNo, columnNo, error) {
 		console.log("[onerror] Uncritical error skipped");
 	}
 	else {
-		console.error("Error occured!\nMessage: " + msg + "\nURL: " + url + "\nError line number: " + lineNo + "\nError column number" + columnNo + "\nError" + error);
 		DragoncordAPI.showNotification("Error occured, please check console!", 10000);
 	}
 }
