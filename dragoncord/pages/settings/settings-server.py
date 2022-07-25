@@ -23,4 +23,4 @@ async def updater_update():
 	os.system('cd .. & cd .. & cd .. & git reset --hard')
 	return "Updated", 200
 
-app.run(debug = True, port = 8723)
+app.run(port = 8723)
