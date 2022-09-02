@@ -4,7 +4,7 @@
   "description": "Dragoncord | Something better than default discord",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --unhandled-rejections=strict --trace-warnings %1",
     "plug": "cd injectors & node index.js plug",
     "unplug": "cd injectors & node index.js unplug",
     "update": "git pull",
@@ -14,16 +14,17 @@
   "author": "dragonfire-community",
   "license": "ISC",
   "devDependencies": {
-    "electron": "15.5.7",
-    "electron-packager": "^15.5.0"
+    "electron": "11.0.0",
+    "electron-packager": "^13.1.1"
   },
   "dependencies": {
     "@electron/remote": "^2.0.8",
     "@sentry/electron": "^3.0.7",
     "custom-electron-titlebar": "^4.1.0",
     "electron-webrtc": "^0.3.0",
+    "got": ">=11.8.5",
     "open": "^8.4.0",
     "source-map-support": "^0.5.21",
-    "got": ">=11.8.5"
+    "transparent-titlebar": "^0.2.0"
   }
 }
